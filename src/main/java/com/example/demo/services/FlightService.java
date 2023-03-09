@@ -37,9 +37,21 @@ public class FlightService {
         return informationRepository.findFlightsByFlightID(id);
     }
 
+    public List<FlightInformation> GetAllFlights() {
+        return informationRepository.findAllFlights();
+    }
+
+    public Optional<FlightBookings> GetFlightBooking(String clientIp, int clientPort, int flightId) {
+        return bookingsRepository.findFlightBookingsByClientIDAndFlightID(clientIp, clientPort, flightId);
+    }
+
+    public List<FlightBookings> GetAllFlightBookings() {
+        return bookingsRepository.findAllFlightBookings();
+    }
+
     //Service 3
     public int AddFlightBooking(String clientIp, int clientPort, int flightId, int numSeats) {
-        Optional<FlightBookings> existingBooking = bookingsRepository.findFlightBookingsByClientIDAndFlightID(clientIp, clientPort, flightId);
+        Optional<FlightBookings> existingBooking = GetFlightBooking(clientIp, clientPort, flightId);
         if (existingBooking.isPresent()) {
             return 0;
         }
@@ -51,7 +63,7 @@ public class FlightService {
 
     //Service 5
     public int DeleteFlightBooking(String clientIp, int clientPort, int flightId) {
-        Optional<FlightBookings> existingBooking = bookingsRepository.findFlightBookingsByClientIDAndFlightID(clientIp, clientPort, flightId);
+        Optional<FlightBookings> existingBooking = GetFlightBooking(clientIp, clientPort, flightId);
         if (existingBooking.isPresent()) {
             return 0;
         }
@@ -63,7 +75,7 @@ public class FlightService {
 
     //Service 6
     public int UpdateFlightBooking(String clientIp, int clientPort, int flightId, int numSeats) {
-        Optional<FlightBookings> existingBooking = bookingsRepository.findFlightBookingsByClientIDAndFlightID(clientIp, clientPort, flightId);
+        Optional<FlightBookings> existingBooking = GetFlightBooking(clientIp, clientPort, flightId);
         if (existingBooking.isPresent()) {
             return 0;
         }
