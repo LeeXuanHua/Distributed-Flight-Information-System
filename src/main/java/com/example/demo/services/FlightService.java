@@ -11,7 +11,7 @@ import com.example.demo.models.FlightInformationRepository;
 import com.example.demo.models.FlightMonitoring;
 import com.example.demo.models.FlightMonitoringRepository;
 
-public class Service {
+public class FlightService {
     private FlightInformationRepository informationRepository;
     private FlightBookingsRepository bookingsRepository;
     private FlightMonitoringRepository monitoringRepository;
