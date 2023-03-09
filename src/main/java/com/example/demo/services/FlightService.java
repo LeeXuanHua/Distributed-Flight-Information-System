@@ -10,11 +10,22 @@ import com.example.demo.models.FlightInformation;
 import com.example.demo.models.FlightInformationRepository;
 import com.example.demo.models.FlightMonitoring;
 import com.example.demo.models.FlightMonitoringRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class FlightService {
     private FlightInformationRepository informationRepository;
     private FlightBookingsRepository bookingsRepository;
     private FlightMonitoringRepository monitoringRepository;
+
+    public FlightService(@Autowired FlightInformationRepository informationRepository,
+                         @Autowired FlightBookingsRepository bookingsRepository,
+                         @Autowired FlightMonitoringRepository monitoringRepository) {
+        this.informationRepository = informationRepository;
+        this.bookingsRepository = bookingsRepository;
+        this.monitoringRepository = monitoringRepository;
+    }
 
     //Service 1
     public List<FlightInformation> GetFlightsBySourceAndDestination(String src, String dest) {
@@ -29,7 +40,7 @@ public class FlightService {
     //Service 3
     public int AddFlightBooking(String clientIp, int clientPort, int flightId, int numSeats) {
         Optional<FlightBookings> existingBooking = bookingsRepository.findFlightBookingsByClientIDAndFlightID(clientIp, clientPort, flightId);
-        if (existingBooking != null) {
+        if (existingBooking.isPresent()) {
             return 0;
         }
 
@@ -41,7 +52,7 @@ public class FlightService {
     //Service 5
     public int DeleteFlightBooking(String clientIp, int clientPort, int flightId) {
         Optional<FlightBookings> existingBooking = bookingsRepository.findFlightBookingsByClientIDAndFlightID(clientIp, clientPort, flightId);
-        if (existingBooking != null) {
+        if (existingBooking.isPresent()) {
             return 0;
         }
 
@@ -53,7 +64,7 @@ public class FlightService {
     //Service 6
     public int UpdateFlightBooking(String clientIp, int clientPort, int flightId, int numSeats) {
         Optional<FlightBookings> existingBooking = bookingsRepository.findFlightBookingsByClientIDAndFlightID(clientIp, clientPort, flightId);
-        if (existingBooking != null) {
+        if (existingBooking.isPresent()) {
             return 0;
         }
 
@@ -65,7 +76,7 @@ public class FlightService {
     //Service 4
     public void AddToMonitorList(String clientIp, int clientPort, int flightId, int interval) {
         Optional<FlightMonitoring> existingMonitor = monitoringRepository.findFlightMonitoringByClientIDAndFlightID(clientIp, clientPort, flightId);
-        if (existingMonitor != null) {
+        if (existingMonitor.isPresent()) {
             monitoringRepository.updateFlightMonitoringByClientIDAndFlightID(clientIp, clientPort, flightId, interval);
             return;
         }
