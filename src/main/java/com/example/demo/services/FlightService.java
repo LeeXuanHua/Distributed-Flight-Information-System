@@ -17,7 +17,7 @@ public class FlightService {
     private FlightMonitoringRepository monitoringRepository;
 
     //Service 1
-    public List<FlightInformation> GetFlightBookingsBySourceAndDestination(String src, String dest) {
+    public List<FlightInformation> GetFlightsBySourceAndDestination(String src, String dest) {
         return informationRepository.findFlightsBySrcAndDest(src, dest);
     }
 
@@ -27,50 +27,50 @@ public class FlightService {
     }
 
     //Service 3
-    public int AddReservation(String clientId, int clientPort, int flightId, int numSeats) {
-        Optional<FlightBookings> existingBooking = bookingsRepository.findFlightBookingsByClientIDAndFlightID(clientId, clientPort, flightId);
+    public int AddFlightBooking(String clientIp, int clientPort, int flightId, int numSeats) {
+        Optional<FlightBookings> existingBooking = bookingsRepository.findFlightBookingsByClientIDAndFlightID(clientIp, clientPort, flightId);
         if (existingBooking != null) {
             return 0;
         }
 
-        int res = bookingsRepository.insertFlightBookings(clientId, clientPort, flightId, numSeats);
+        int res = bookingsRepository.insertFlightBookings(clientIp, clientPort, flightId, numSeats);
         SendUpdateToMonitorList(flightId);
         return res;
     }
 
     //Service 5
-    public int DeleteReservation(String clientId, int clientPort, int flightId) {
-        Optional<FlightBookings> existingBooking = bookingsRepository.findFlightBookingsByClientIDAndFlightID(clientId, clientPort, flightId);
+    public int DeleteFlightBooking(String clientIp, int clientPort, int flightId) {
+        Optional<FlightBookings> existingBooking = bookingsRepository.findFlightBookingsByClientIDAndFlightID(clientIp, clientPort, flightId);
         if (existingBooking != null) {
             return 0;
         }
 
-        int res = bookingsRepository.deleteFlightBookings(clientId, clientPort, flightId);
+        int res = bookingsRepository.deleteFlightBookings(clientIp, clientPort, flightId);
         SendUpdateToMonitorList(flightId);
         return res;
     }
 
     //Service 6
-    public int UpdateReservation(String clientId, int clientPort, int flightId, int numSeats) {
-        Optional<FlightBookings> existingBooking = bookingsRepository.findFlightBookingsByClientIDAndFlightID(clientId, clientPort, flightId);
+    public int UpdateFlightBooking(String clientIp, int clientPort, int flightId, int numSeats) {
+        Optional<FlightBookings> existingBooking = bookingsRepository.findFlightBookingsByClientIDAndFlightID(clientIp, clientPort, flightId);
         if (existingBooking != null) {
             return 0;
         }
 
-        int res = bookingsRepository.incrementFlightBookings(clientId, clientPort, flightId, numSeats);
+        int res = bookingsRepository.incrementFlightBookings(clientIp, clientPort, flightId, numSeats);
         SendUpdateToMonitorList(flightId);
         return res;
     }
 
     //Service 4
-    public void AddToMonitorList(String clientIP, int clientPort, int flightId, int interval) {
-        Optional<FlightMonitoring> existingMonitor = monitoringRepository.findFlightMonitoringByClientIDAndFlightID(clientIP, clientPort, flightId);
+    public void AddToMonitorList(String clientIp, int clientPort, int flightId, int interval) {
+        Optional<FlightMonitoring> existingMonitor = monitoringRepository.findFlightMonitoringByClientIDAndFlightID(clientIp, clientPort, flightId);
         if (existingMonitor != null) {
-            monitoringRepository.updateFlightMonitoringByClientIDAndFlightID(clientIP, clientPort, flightId, interval);
+            monitoringRepository.updateFlightMonitoringByClientIDAndFlightID(clientIp, clientPort, flightId, interval);
             return;
         }
 
-        monitoringRepository.insertFlightMonitoringByClientIDAndFlightID(clientIP, clientPort, flightId, interval);
+        monitoringRepository.insertFlightMonitoringByClientIDAndFlightID(clientIp, clientPort, flightId, interval);
     }
 
     private void SendUpdateToMonitorList(int flightId) {
