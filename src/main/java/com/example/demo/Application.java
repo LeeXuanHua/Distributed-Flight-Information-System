@@ -113,14 +113,22 @@ public class Application {
 
             flightMonitoringRepository.findAll().forEach(System.out::println);
 
-
             // Add 1 flight via FlightService instead of FlightInformationRepository
-            int flightID_FS = faker.number().numberBetween(1, 100);
+        //     int flightID_FS = faker.number().numberBetween(1, 100);
             int clientSeat_FS = faker.number().numberBetween(1, 100);
             ClientID clientID_FS = new ClientID((String) faker.internet().ipV4Address(), faker.number().numberBetween(1, 100));
 
-            System.out.println(String.format("Trying to add %s to flight %d with seat %d", clientID_FS, flightID_FS, clientSeat_FS));
-            flightService.AddFlightBooking(clientID_FS.getIP(), clientID_FS.getPort(), flightID_FS, clientSeat_FS);
+            System.out.println("----------- All avaiable flights -----------");
+            List<FlightInformation> allFlights = flightService.GetAllFlights();
+            for (FlightInformation flight : allFlights) {
+                System.out.println(flight);
+            }
+
+            System.out.println("----------- All current bookings -----------");
+            List<FlightBookings> allBookings = flightService.GetAllFlightBookings();
+            for (FlightBookings booking : allBookings) {
+                System.out.println(booking);
+            }
 
             // Service 1
             System.out.println("Service 1");
@@ -129,8 +137,29 @@ public class Application {
 
             // Service 2
             System.out.println("Service 2");
-            Optional<FlightInformation> flight = flightService.GetFlightById(flightID_FS);
+            Optional<FlightInformation> flight = flightService.GetFlightById(flightID);
             System.out.println(flight);
+
+            // Service 3
+            System.out.println("Service 3 - Add Flight Booking");
+            System.out.println(String.format("Trying to add %s to flight %d with seat %d", clientID_FS, flightID, clientSeat_FS));
+            flightService.AddFlightBooking(clientID_FS.getIP(), clientID_FS.getPort(), flightID, clientSeat_FS);
+            System.out.println(flightService.GetFlightById(flightID));
+            System.out.println(flightService.GetFlightBooking(clientID_FS.getIP(), clientID_FS.getPort(), flightID));
+
+            // Service 6
+            System.out.println("Service 6 - Update Flight Booking");
+            System.out.println(String.format("Trying to update %s in flight %d by increasing num of seats by %d", clientID_FS, flightID, clientSeat_FS));
+            flightService.UpdateFlightBooking(clientID_FS.getIP(), clientID_FS.getPort(), flightID, clientSeat_FS);
+            System.out.println(flightService.GetFlightById(flightID));
+            System.out.println(flightService.GetFlightBooking(clientID_FS.getIP(), clientID_FS.getPort(), flightID));
+
+            // Service 5
+            System.out.println("Service 5 - Remove Flight Booking");
+            System.out.println(String.format("Trying to remove %s from flight %d", clientID_FS, flightID));
+            flightService.DeleteFlightBooking(clientID_FS.getIP(), clientID_FS.getPort(), flightID);
+            System.out.println(flightService.GetFlightById(flightID));
+            System.out.println(flightService.GetFlightBooking(clientID_FS.getIP(), clientID_FS.getPort(), flightID));
         };
     }
 }

@@ -51,42 +51,64 @@ public class FlightService {
 
     //Service 3
     public int AddFlightBooking(String clientIp, int clientPort, int flightId, int numSeats) {
+        Optional<FlightInformation> existingFlight = GetFlightById(flightId);
+        if (!existingFlight.isPresent()) {
+            return 0;
+        }
+
         Optional<FlightBookings> existingBooking = GetFlightBooking(clientIp, clientPort, flightId);
         if (existingBooking.isPresent()) {
             return 0;
         }
 
-        int res = bookingsRepository.insertFlightBookings(clientIp, clientPort, flightId, numSeats);
+        int availableSeats = existingFlight.get().getSeatAvailability();
+        int actualBookedSeats = numSeats <= availableSeats ? numSeats : numSeats - availableSeats;
+        bookingsRepository.insertFlightBookings(clientIp, clientPort, flightId, actualBookedSeats);
+        informationRepository.updateFlightsSeatAvailability(flightId, availableSeats - actualBookedSeats);
         SendUpdateToMonitorList(flightId);
-        return res;
+        return actualBookedSeats;
     }
 
     //Service 5
     public int DeleteFlightBooking(String clientIp, int clientPort, int flightId) {
         Optional<FlightBookings> existingBooking = GetFlightBooking(clientIp, clientPort, flightId);
-        if (existingBooking.isPresent()) {
+        if (!existingBooking.isPresent()) {
             return 0;
         }
 
-        int res = bookingsRepository.deleteFlightBookings(clientIp, clientPort, flightId);
+        int releasedSeats = existingBooking.get().getNumSeats();
+        bookingsRepository.deleteFlightBookings(clientIp, clientPort, flightId);
+
+        Optional<FlightInformation> flight = informationRepository.findFlightsByFlightID(flightId);
+        informationRepository.updateFlightsSeatAvailability(flightId, flight.get().getSeatAvailability() + releasedSeats);
         SendUpdateToMonitorList(flightId);
-        return res;
+        return releasedSeats;
     }
 
     //Service 6
     public int UpdateFlightBooking(String clientIp, int clientPort, int flightId, int numSeats) {
         Optional<FlightBookings> existingBooking = GetFlightBooking(clientIp, clientPort, flightId);
-        if (existingBooking.isPresent()) {
+        if (!existingBooking.isPresent()) {
             return 0;
         }
 
-        int res = bookingsRepository.incrementFlightBookings(clientIp, clientPort, flightId, numSeats);
+        Optional<FlightInformation> existingFlight = GetFlightById(flightId);
+        int availableSeats = existingFlight.get().getSeatAvailability();
+        int actualBookedSeats = numSeats <= availableSeats ? numSeats : numSeats - availableSeats;
+
+        bookingsRepository.incrementFlightBookings(clientIp, clientPort, flightId, actualBookedSeats);
+        informationRepository.updateFlightsSeatAvailability(flightId, availableSeats - actualBookedSeats);
         SendUpdateToMonitorList(flightId);
-        return res;
+        return actualBookedSeats;
     }
 
     //Service 4
     public void AddToMonitorList(String clientIp, int clientPort, int flightId, int interval) {
+        Optional<FlightInformation> existingFlight = GetFlightById(flightId);
+        if (!existingFlight.isPresent()) {
+            return;
+        }
+
         Optional<FlightMonitoring> existingMonitor = monitoringRepository.findFlightMonitoringByClientIDAndFlightID(clientIp, clientPort, flightId);
         if (existingMonitor.isPresent()) {
             monitoringRepository.updateFlightMonitoringByClientIDAndFlightID(clientIp, clientPort, flightId, interval);
@@ -107,7 +129,7 @@ public class FlightService {
             //     SendUpdate(monitor);
             // }
         }
-
+        //lazy cleanup of expired monitoring channels
         CleanUpMonitorList(expiredMonitors);
     }
 
