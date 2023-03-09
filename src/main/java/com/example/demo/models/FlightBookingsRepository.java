@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FlightBookingsRepository extends PagingAndSortingRepository<FlightBookings, ClientID> {
-    // For service 3 - make seat reservation by specifying the flight identifier and the number of seats to reserve
+    // For service 3 & 5 - make seat reservation by specifying the flight identifier and the number of seats to reserve
     // Check if clientID and flightID exists in the database
     @Query(value = "SELECT * FROM Flight_Bookings WHERE client_ip = :clientIP AND client_port = :clientPort AND flight_identifier = :flightID", nativeQuery = true)
     Optional<FlightBookings> findFlightBookingsByClientIDAndFlightID(

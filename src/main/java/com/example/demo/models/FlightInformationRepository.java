@@ -17,13 +17,13 @@ public interface FlightInformationRepository extends PagingAndSortingRepository<
     @Query(
             value = "SELECT * FROM Flight_Information WHERE source = :src AND destination = :dest",
             nativeQuery = true)
-    List<FlightInformation> findFlightBookingsBySrcAndDest(
+    List<FlightInformation> findFlightsBySrcAndDest(
             @Param("src") String src,
             @Param("dest") String dest);
 
     // For service 2 - query the departure time, airfare and seat availability by specifying the flight identifier
     @Query(value = "SELECT f FROM Flight_Information f WHERE f.flightID = ?1")
-    Optional<FlightInformation> findFlightBookingsByFlightID(int flightID);
+    Optional<FlightInformation> findFlightsByFlightID(int flightID);
 
     // For service 3 - make seat reservation by specifying the flight identifier and the number of seats to reserve
     // Also for service 5 - remove seat reservation record
@@ -31,28 +31,28 @@ public interface FlightInformationRepository extends PagingAndSortingRepository<
     @Transactional
     @Modifying
     @Query("UPDATE Flight_Information u SET u.seatAvailability = :newSeatAvailability WHERE u.flightID = :flightID")
-    int  updateFlightBookingsSeatAvailability(
+    int  updateFlightsSeatAvailability(
             @Param("flightID") int flightID,
             @Param("newSeatAvailability") int newSeatAvailability);
 
 
     // Miscellaneous Services
     @Query(value = "SELECT f FROM Flight_Information f WHERE f.src = ?1")
-    Optional<FlightInformation> findFlightBookingsBySrc(String src);
+    Optional<FlightInformation> findFlightsBySrc(String src);
 
     @Query(value = "SELECT f FROM Flight_Information f WHERE f.dest = ?1")
-    Optional<FlightInformation> findFlightBookingsByDest(String dest);
+    Optional<FlightInformation> findFlightsByDest(String dest);
 
     @Query(value = "SELECT f FROM Flight_Information f WHERE f.departureTime = ?1")
-    Optional<FlightInformation> findFlightBookingsByDepartureTime(String departureTime);
+    Optional<FlightInformation> findFlightsByDepartureTime(String departureTime);
 
     @Query(value = "SELECT f FROM Flight_Information f WHERE f.airfare = ?1")
-    Optional<FlightInformation> findFlightBookingsByAirfare(double airfare);
+    Optional<FlightInformation> findFlightsByAirfare(double airfare);
 
     @Query(value = "SELECT f FROM Flight_Information f WHERE f.seatAvailability = ?1")
-    Optional<FlightInformation> findFlightBookingsBySeatAvailability(int seatAvailability);
+    Optional<FlightInformation> findFlightsBySeatAvailability(int seatAvailability);
 
     @Query(value = "SELECT f FROM Flight_Information f WHERE f.seatAvailability >= ?1")
-    Optional<FlightInformation> findFlightBookingsBySeatAvailabilityGreaterOrEqual(int seatAvailability);
+    Optional<FlightInformation> findFlightsBySeatAvailabilityGreaterOrEqual(int seatAvailability);
 
 }

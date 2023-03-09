@@ -50,4 +50,8 @@ public interface FlightMonitoringRepository extends PagingAndSortingRepository<F
             @Param("clientIP") String clientIP,
             @Param("clientPort") int clientPort,
             @Param("flightID") int flightID);
+
+    // Get all records to send updates
+    @Query(value = "SELECT * FROM Flight_Monitoring WHERE flight_identifier = :flightID", nativeQuery = true)
+    List<FlightMonitoring> findAllFlightMonitoring(@Param("flightID") int flightID);
 }

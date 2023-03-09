@@ -50,14 +50,14 @@ public class Application {
                         System.out.println(String.format("findById %d: %s", flightID, s));
                     });
 
-            flightInformationRepository.findFlightBookingsBySrcAndDest(src, dest)
+            flightInformationRepository.findFlightsBySrcAndDest(src, dest)
                     .forEach(System.out::println);
 
             flightInformationRepository.findAll().forEach(System.out::println);
 
-            flightInformationRepository.updateFlightBookingsSeatAvailability(flightID, seatAvailability-5);
+            flightInformationRepository.updateFlightsSeatAvailability(flightID, seatAvailability-5);
 
-            flightInformationRepository.findFlightBookingsBySrcAndDest(src, dest)
+            flightInformationRepository.findFlightsBySrcAndDest(src, dest)
                     .forEach(System.out::println);
 
 
