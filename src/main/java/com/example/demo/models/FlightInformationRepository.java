@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-@Transactional(readOnly = true)
+@Transactional(readOnly = false)
 public interface FlightInformationRepository extends PagingAndSortingRepository<FlightInformation, Integer> {
     // For service 1 - query the flight identifier(s) by specifying the source and destination places
     @Query(

@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
+@Transactional(readOnly = false)
 public interface FlightBookingsRepository extends PagingAndSortingRepository<FlightBookings, ClientID> {
     // For service 3 & 5 - make seat reservation by specifying the flight identifier and the number of seats to reserve
     // Check if clientID and flightID exists in the database
