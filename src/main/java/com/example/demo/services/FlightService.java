@@ -120,7 +120,7 @@ public class FlightService {
 
     private void SendUpdateToMonitorList(int flightId) {
         List<FlightMonitoring> expiredMonitors = new ArrayList<>();
-        List<FlightMonitoring> monitors = monitoringRepository.findAllFlightMonitoring(flightId);
+        List<FlightMonitoring> monitors = monitoringRepository.findFlightMonitoringByFlightId(flightId);
         for (FlightMonitoring monitor : monitors) {
             // TODO: add condition to filter expired monitors, ideally:
             // if (monitor.getExpiry() < currentTime) {
