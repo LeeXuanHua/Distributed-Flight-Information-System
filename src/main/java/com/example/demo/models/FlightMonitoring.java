@@ -1,5 +1,7 @@
 package com.example.demo.models;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.*;
 
 /**
@@ -16,13 +18,13 @@ public class FlightMonitoring {
 
     @Column(name = "flight_identifier", nullable = false)
     private int flightID;
-    @Column(name = "monitor_interval", nullable = false)
-    private int monitorInterval;
+    @Column(name = "expiry", nullable = false)
+    private LocalDateTime expiry;
 
-    public FlightMonitoring(ClientID clientID, int flightID, int monitorInterval) {
+    public FlightMonitoring(ClientID clientID, int flightID, LocalDateTime expiry) {
         this.clientID = clientID;
         this.flightID = flightID;
-        this.monitorInterval = monitorInterval;
+        this.expiry = expiry;
     }
 
     public FlightMonitoring() {}
@@ -43,12 +45,12 @@ public class FlightMonitoring {
         this.flightID = flightID;
     }
 
-    public int getMonitorInterval() {
-        return monitorInterval;
+    public LocalDateTime getExpiry() {
+        return expiry;
     }
 
-    public void setMonitorInterval(int monitorInterval) {
-        this.monitorInterval = monitorInterval;
+    public void setExpiry(LocalDateTime expiry) {
+        this.expiry = expiry;
     }
 
     @Override
@@ -56,7 +58,7 @@ public class FlightMonitoring {
         return "FlightMonitoring{" +
                 "clientID=" + clientID +
                 ", flightID=" + flightID +
-                ", monitorInterval=" + monitorInterval +
+                ", monitorInterval=" + expiry +
                 '}';
     }
 }

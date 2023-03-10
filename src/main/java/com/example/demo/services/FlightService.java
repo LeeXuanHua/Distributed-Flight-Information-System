@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -103,7 +104,7 @@ public class FlightService {
     }
 
     //Service 4
-    public void AddToMonitorList(String clientIp, int clientPort, int flightId, int interval) {
+    public void AddToMonitorList(String clientIp, int clientPort, int flightId, LocalDateTime expiry) {
         Optional<FlightInformation> existingFlight = GetFlightById(flightId);
         if (!existingFlight.isPresent()) {
             return;
@@ -111,23 +112,27 @@ public class FlightService {
 
         Optional<FlightMonitoring> existingMonitor = monitoringRepository.findFlightMonitoringByClientIDAndFlightID(clientIp, clientPort, flightId);
         if (existingMonitor.isPresent()) {
-            monitoringRepository.updateFlightMonitoringByClientIDAndFlightID(clientIp, clientPort, flightId, interval);
+            monitoringRepository.updateFlightMonitoringByClientIDAndFlightID(clientIp, clientPort, flightId, expiry);
             return;
         }
 
-        monitoringRepository.insertFlightMonitoringByClientIDAndFlightID(clientIp, clientPort, flightId, interval);
+        monitoringRepository.insertFlightMonitoringByClientIDAndFlightID(clientIp, clientPort, flightId, expiry);
+    }
+
+    public List<FlightMonitoring> GetMonitorList() {
+        return monitoringRepository.findAllFlightMonitoring();
     }
 
     private void SendUpdateToMonitorList(int flightId) {
         List<FlightMonitoring> expiredMonitors = new ArrayList<>();
         List<FlightMonitoring> monitors = monitoringRepository.findFlightMonitoringByFlightId(flightId);
+        LocalDateTime now = LocalDateTime.now();
         for (FlightMonitoring monitor : monitors) {
-            // TODO: add condition to filter expired monitors, ideally:
-            // if (monitor.getExpiry() < currentTime) {
-            //     expiredMonitors.add(monitor);
-            // } else {
-            //     SendUpdate(monitor);
-            // }
+            if (now.isAfter(monitor.getExpiry())) {
+                expiredMonitors.add(monitor);
+            } else {
+                SendUpdate(monitor);
+            }
         }
         //lazy cleanup of expired monitoring channels
         CleanUpMonitorList(expiredMonitors);

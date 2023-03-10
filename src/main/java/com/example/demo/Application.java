@@ -8,6 +8,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -92,26 +93,26 @@ public class Application {
 
             // flightMonitoringRepository
             // Create a fake record
-            int monitorInterval = faker.number().numberBetween(1, 100);
-            int monitorInterval2 = faker.number().numberBetween(1, 100);
+            // int monitorInterval = faker.number().numberBetween(1, 100);
+            // int monitorInterval2 = faker.number().numberBetween(1, 100);
 
-            FlightMonitoring flightMonitoring = new FlightMonitoring(
-                    clientID,
-                    flightID,
-                    monitorInterval);
+            // FlightMonitoring flightMonitoring = new FlightMonitoring(
+            //         clientID,
+            //         flightID,
+            //         monitorInterval);
 
-            flightMonitoringRepository.save(flightMonitoring);
+            // flightMonitoringRepository.save(flightMonitoring);
 
-            flightMonitoringRepository.findFlightMonitoringByClientIDAndFlightID(clientID.getIP(), clientID.getPort(), flightID)
-                    .ifPresent(s -> {
-                        System.out.println(String.format("findFlightMonitoringByClientIDAndFlightID %s: %s", clientID, s));
-                    });
+            // flightMonitoringRepository.findFlightMonitoringByClientIDAndFlightID(clientID.getIP(), clientID.getPort(), flightID)
+            //         .ifPresent(s -> {
+            //             System.out.println(String.format("findFlightMonitoringByClientIDAndFlightID %s: %s", clientID, s));
+            //         });
 
-            flightMonitoringRepository.updateFlightMonitoringByClientIDAndFlightID(clientID.getIP(), clientID.getPort(), flightID, monitorInterval2);
+            // flightMonitoringRepository.updateFlightMonitoringByClientIDAndFlightID(clientID.getIP(), clientID.getPort(), flightID, monitorInterval2);
 
-            flightMonitoringRepository.insertFlightMonitoringByClientIDAndFlightID(clientID2.getIP(), clientID2.getPort(), flightID, monitorInterval2);
+            // flightMonitoringRepository.insertFlightMonitoringByClientIDAndFlightID(clientID2.getIP(), clientID2.getPort(), flightID, monitorInterval2);
 
-            flightMonitoringRepository.findAll().forEach(System.out::println);
+            // flightMonitoringRepository.findAll().forEach(System.out::println);
 
             // Add 1 flight via FlightService instead of FlightInformationRepository
         //     int flightID_FS = faker.number().numberBetween(1, 100);
@@ -160,6 +161,12 @@ public class Application {
             flightService.DeleteFlightBooking(clientID_FS.getIP(), clientID_FS.getPort(), flightID);
             System.out.println(flightService.GetFlightById(flightID));
             System.out.println(flightService.GetFlightBooking(clientID_FS.getIP(), clientID_FS.getPort(), flightID));
+
+            // Service 4
+            System.out.println("Service 4 - Add To Monitoring");
+            System.out.println(String.format("Trying to add %s to monitoring list for flight %d", clientID_FS, flightID));
+            flightService.AddToMonitorList(clientID_FS.getIP(), clientID_FS.getPort(), flightID, LocalDateTime.of(2023, 3, 30, 12, 0, 0));
+            System.out.println(flightService.GetMonitorList());
         };
     }
 }

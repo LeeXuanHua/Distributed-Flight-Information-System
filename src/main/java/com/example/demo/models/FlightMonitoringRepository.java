@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,22 +28,22 @@ public interface FlightMonitoringRepository extends PagingAndSortingRepository<F
     // Add new record if above does not exist
     @Transactional
     @Modifying
-    @Query(value = "INSERT INTO Flight_Monitoring (client_ip, client_port, flight_identifier, monitor_interval) VALUES (:clientIP, :clientPort, :flightID, :monitorInterval)", nativeQuery = true)
+    @Query(value = "INSERT INTO Flight_Monitoring (client_ip, client_port, flight_identifier, expiry) VALUES (:clientIP, :clientPort, :flightID, :expiry)", nativeQuery = true)
     int insertFlightMonitoringByClientIDAndFlightID(
             @Param("clientIP") String clientIP,
             @Param("clientPort") int clientPort,
             @Param("flightID") int flightID,
-            @Param("monitorInterval") int monitorInterval);
+            @Param("expiry") LocalDateTime expiry);
 
     // Update monitor interval if above exists
     @Transactional
     @Modifying
-    @Query(value = "UPDATE Flight_Monitoring SET monitor_interval = :monitorInterval WHERE client_ip = :clientIP AND client_port = :clientPort AND flight_identifier = :flightID", nativeQuery = true)
+    @Query(value = "UPDATE Flight_Monitoring SET expiry = :expiry WHERE client_ip = :clientIP AND client_port = :clientPort AND flight_identifier = :flightID", nativeQuery = true)
     int updateFlightMonitoringByClientIDAndFlightID(
             @Param("clientIP") String clientIP,
             @Param("clientPort") int clientPort,
             @Param("flightID") int flightID,
-            @Param("monitorInterval") int monitorInterval);
+            @Param("expiry") LocalDateTime expiry);
 
     // Remove monitoring record (when time is up)
     @Transactional
@@ -53,7 +54,9 @@ public interface FlightMonitoringRepository extends PagingAndSortingRepository<F
             @Param("clientPort") int clientPort,
             @Param("flightID") int flightID);
 
-    // Get all records to send updates
     @Query(value = "SELECT * FROM Flight_Monitoring WHERE flight_identifier = :flightID", nativeQuery = true)
     List<FlightMonitoring> findFlightMonitoringByFlightId(@Param("flightID") int flightID);
+
+    @Query(value = "SELECT * FROM Flight_Monitoring", nativeQuery = true)
+    List<FlightMonitoring> findAllFlightMonitoring();
 }
