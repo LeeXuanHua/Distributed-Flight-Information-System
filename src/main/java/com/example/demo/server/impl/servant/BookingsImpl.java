@@ -84,7 +84,7 @@ public class BookingsImpl implements BookingsRemoteInterface {
 
         Optional<Information> existingFlight = this.informationService.GetFlightById(flightId);
         int availableSeats = existingFlight.get().getSeatAvailability();
-        int actualBookedSeats = numSeats <= availableSeats ? numSeats : numSeats - availableSeats;
+        int actualBookedSeats = numSeats <= availableSeats ? numSeats : availableSeats;
 
         bookingsRepository.incrementFlightBookings(clientIp, clientPort, flightId, actualBookedSeats);
         informationRepository.updateFlightsSeatAvailability(flightId, availableSeats - actualBookedSeats);
