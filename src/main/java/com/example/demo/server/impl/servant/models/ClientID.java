@@ -1,4 +1,4 @@
-package com.example.demo.models;
+package com.example.demo.server.impl.servant.models;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;

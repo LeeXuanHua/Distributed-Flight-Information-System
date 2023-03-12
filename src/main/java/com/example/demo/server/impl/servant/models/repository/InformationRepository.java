@@ -1,6 +1,6 @@
-package com.example.demo.models;
+package com.example.demo.server.impl.servant.models.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.example.demo.server.impl.servant.models.Information;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -12,18 +12,18 @@ import java.util.Optional;
 
 @Repository
 @Transactional(readOnly = false)
-public interface FlightInformationRepository extends PagingAndSortingRepository<FlightInformation, Integer> {
+public interface InformationRepository extends PagingAndSortingRepository<Information, Integer> {
         // For service 1 - query the flight identifier(s) by specifying the source and
         // destination places
         @Query(value = "SELECT * FROM Flight_Information WHERE source = :src AND destination = :dest", nativeQuery = true)
-        List<FlightInformation> findFlightsBySrcAndDest(
+        List<Information> findFlightsBySrcAndDest(
                         @Param("src") String src,
                         @Param("dest") String dest);
 
         // For service 2 - query the departure time, airfare and seat availability by
         // specifying the flight identifier
         @Query(value = "SELECT f FROM Flight_Information f WHERE f.flightID = ?1")
-        Optional<FlightInformation> findFlightsByFlightID(int flightID);
+        Optional<Information> findFlightsByFlightID(int flightID);
 
         // For service 3 - make seat reservation by specifying the flight identifier and
         // the number of seats to reserve
@@ -38,24 +38,24 @@ public interface FlightInformationRepository extends PagingAndSortingRepository<
 
         // Miscellaneous Services
         @Query(value = "SELECT f FROM Flight_Information f")
-        List<FlightInformation> findAllFlights();
+        List<Information> findAllFlights();
     
         @Query(value = "SELECT f FROM Flight_Information f WHERE f.src = ?1")
-        Optional<FlightInformation> findFlightsBySrc(String src);
+        Optional<Information> findFlightsBySrc(String src);
 
         @Query(value = "SELECT f FROM Flight_Information f WHERE f.dest = ?1")
-        Optional<FlightInformation> findFlightsByDest(String dest);
+        Optional<Information> findFlightsByDest(String dest);
 
         @Query(value = "SELECT f FROM Flight_Information f WHERE f.departureTime = ?1")
-        Optional<FlightInformation> findFlightsByDepartureTime(String departureTime);
+        Optional<Information> findFlightsByDepartureTime(String departureTime);
 
         @Query(value = "SELECT f FROM Flight_Information f WHERE f.airfare = ?1")
-        Optional<FlightInformation> findFlightsByAirfare(double airfare);
+        Optional<Information> findFlightsByAirfare(double airfare);
 
         @Query(value = "SELECT f FROM Flight_Information f WHERE f.seatAvailability = ?1")
-        Optional<FlightInformation> findFlightsBySeatAvailability(int seatAvailability);
+        Optional<Information> findFlightsBySeatAvailability(int seatAvailability);
 
         @Query(value = "SELECT f FROM Flight_Information f WHERE f.seatAvailability >= ?1")
-        Optional<FlightInformation> findFlightsBySeatAvailabilityGreaterOrEqual(int seatAvailability);
+        Optional<Information> findFlightsBySeatAvailabilityGreaterOrEqual(int seatAvailability);
 
 }

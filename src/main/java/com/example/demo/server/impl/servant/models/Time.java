@@ -1,4 +1,4 @@
-//package com.example.demo.models;
+//package com.example.demo.server.impl.servant.models;
 //
 ///**
 // * Self-defined time class to store the year, month, date, hours, min, sec, and ms in integers.

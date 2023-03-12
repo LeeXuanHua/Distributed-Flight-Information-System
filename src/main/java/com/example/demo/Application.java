@@ -1,7 +1,12 @@
 package com.example.demo;
 
-import com.example.demo.models.*;
-import com.example.demo.services.FlightService;
+import com.example.demo.server.impl.servant.models.*;
+import com.example.demo.server.impl.servant.BookingsImpl;
+import com.example.demo.server.impl.servant.InformationImpl;
+import com.example.demo.server.impl.servant.MonitoringImpl;
+import com.example.demo.server.impl.servant.models.repository.BookingsRepository;
+import com.example.demo.server.impl.servant.models.repository.InformationRepository;
+import com.example.demo.server.impl.servant.models.repository.MonitoringRepository;
 import com.github.javafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -22,10 +27,12 @@ public class Application {
     // Demonstrate the various functions and test the database
     @Bean
     CommandLineRunner commandLineRunner(
-            FlightService flightService,
-            FlightInformationRepository flightInformationRepository,
-            FlightBookingsRepository flightBookingsRepository,
-            FlightMonitoringRepository flightMonitoringRepository) {
+            BookingsImpl bookingsService,
+            MonitoringImpl monitoringService,
+            InformationImpl informationService,
+            InformationRepository informationRepository,
+            BookingsRepository bookingsRepository,
+            MonitoringRepository monitoringRepository) {
         return args -> {
             // FlightInformationRepository
             // Create a fake record
@@ -38,7 +45,7 @@ public class Application {
             double airfare = faker.number().randomDouble(2, 100, 1000);
             int seatAvailability = faker.number().numberBetween(1, 100);
 
-            FlightInformation flightInformation = new FlightInformation(
+            Information information = new Information(
                     flightID,
                     src,
                     dest,
@@ -46,21 +53,21 @@ public class Application {
                     airfare,
                     seatAvailability);
 
-            flightInformationRepository.save(flightInformation);
+            informationRepository.save(information);
 
-            flightInformationRepository.findById(flightID)
+            informationRepository.findById(flightID)
                     .ifPresent(s -> {
                         System.out.println(String.format("findById %d: %s", flightID, s));
                     });
 
-            flightInformationRepository.findFlightsBySrcAndDest(src, dest)
+            informationRepository.findFlightsBySrcAndDest(src, dest)
                     .forEach(System.out::println);
 
-            flightInformationRepository.findAll().forEach(System.out::println);
+            informationRepository.findAll().forEach(System.out::println);
 
-            flightInformationRepository.updateFlightsSeatAvailability(flightID, seatAvailability - 5);
+            informationRepository.updateFlightsSeatAvailability(flightID, seatAvailability - 5);
 
-            flightInformationRepository.findFlightsBySrcAndDest(src, dest)
+            informationRepository.findFlightsBySrcAndDest(src, dest)
                     .forEach(System.out::println);
 
 
@@ -72,23 +79,23 @@ public class Application {
             ClientID clientID2 = new ClientID((String) faker.internet().ipV4Address(), faker.number().numberBetween(1, 100));
             int clientSeat2 = faker.number().numberBetween(1, 100);
 
-            FlightBookings flightBookings = new FlightBookings(
+            Bookings bookings = new Bookings(
                     clientID,
                     flightID,
                     clientSeat);
 
-            flightBookingsRepository.save(flightBookings);
+            bookingsRepository.save(bookings);
 
-            flightBookingsRepository.findFlightBookingsByClientIDAndFlightID(clientID.getIP(), clientID.getPort(), flightID)
+            bookingsRepository.findFlightBookingsByClientIDAndFlightID(clientID.getIP(), clientID.getPort(), flightID)
                     .ifPresent(s -> {
                         System.out.println(String.format("findFlightBookingsByClientIDAndFlightID %s: %s", clientID, s));
                     });
 
-            flightBookingsRepository.incrementFlightBookings(clientID.getIP(), clientID.getPort(), flightID, 10);
+            bookingsRepository.incrementFlightBookings(clientID.getIP(), clientID.getPort(), flightID, 10);
 
-            flightBookingsRepository.insertFlightBookings(clientID2.getIP(), clientID2.getPort(), flightID, clientSeat2);
+            bookingsRepository.insertFlightBookings(clientID2.getIP(), clientID2.getPort(), flightID, clientSeat2);
 
-            flightBookingsRepository.findAll().forEach(System.out::println);
+            bookingsRepository.findAll().forEach(System.out::println);
 
 
             // flightMonitoringRepository
@@ -120,53 +127,53 @@ public class Application {
             ClientID clientID_FS = new ClientID((String) faker.internet().ipV4Address(), faker.number().numberBetween(1, 100));
 
             System.out.println("----------- All avaiable flights -----------");
-            List<FlightInformation> allFlights = flightService.GetAllFlights();
-            for (FlightInformation flight : allFlights) {
+            List<Information> allFlights = informationService.GetAllFlights();
+            for (Information flight : allFlights) {
                 System.out.println(flight);
             }
 
             System.out.println("----------- All current bookings -----------");
-            List<FlightBookings> allBookings = flightService.GetAllFlightBookings();
-            for (FlightBookings booking : allBookings) {
+            List<Bookings> allBookings = bookingsService.GetAllFlightBookings();
+            for (Bookings booking : allBookings) {
                 System.out.println(booking);
             }
 
             // Service 1
             System.out.println("Service 1");
-            List<FlightInformation> flights = flightService.GetFlightsBySourceAndDestination(src, dest);
+            List<Information> flights = informationService.GetFlightsBySourceAndDestination(src, dest);
             flights.forEach(System.out::println);
 
             // Service 2
             System.out.println("Service 2");
-            Optional<FlightInformation> flight = flightService.GetFlightById(flightID);
+            Optional<Information> flight = informationService.GetFlightById(flightID);
             System.out.println(flight);
 
             // Service 3
             System.out.println("Service 3 - Add Flight Booking");
             System.out.println(String.format("Trying to add %s to flight %d with seat %d", clientID_FS, flightID, clientSeat_FS));
-            flightService.AddFlightBooking(clientID_FS.getIP(), clientID_FS.getPort(), flightID, clientSeat_FS);
-            System.out.println(flightService.GetFlightById(flightID));
-            System.out.println(flightService.GetFlightBooking(clientID_FS.getIP(), clientID_FS.getPort(), flightID));
+            bookingsService.AddFlightBooking(clientID_FS.getIP(), clientID_FS.getPort(), flightID, clientSeat_FS);
+            System.out.println(informationService.GetFlightById(flightID));
+            System.out.println(bookingsService.GetFlightBooking(clientID_FS.getIP(), clientID_FS.getPort(), flightID));
 
             // Service 6
             System.out.println("Service 6 - Update Flight Booking");
             System.out.println(String.format("Trying to update %s in flight %d by increasing num of seats by %d", clientID_FS, flightID, clientSeat_FS));
-            flightService.UpdateFlightBooking(clientID_FS.getIP(), clientID_FS.getPort(), flightID, clientSeat_FS);
-            System.out.println(flightService.GetFlightById(flightID));
-            System.out.println(flightService.GetFlightBooking(clientID_FS.getIP(), clientID_FS.getPort(), flightID));
+            bookingsService.UpdateFlightBooking(clientID_FS.getIP(), clientID_FS.getPort(), flightID, clientSeat_FS);
+            System.out.println(informationService.GetFlightById(flightID));
+            System.out.println(bookingsService.GetFlightBooking(clientID_FS.getIP(), clientID_FS.getPort(), flightID));
 
             // Service 5
             System.out.println("Service 5 - Remove Flight Booking");
             System.out.println(String.format("Trying to remove %s from flight %d", clientID_FS, flightID));
-            flightService.DeleteFlightBooking(clientID_FS.getIP(), clientID_FS.getPort(), flightID);
-            System.out.println(flightService.GetFlightById(flightID));
-            System.out.println(flightService.GetFlightBooking(clientID_FS.getIP(), clientID_FS.getPort(), flightID));
+            bookingsService.DeleteFlightBooking(clientID_FS.getIP(), clientID_FS.getPort(), flightID);
+            System.out.println(informationService.GetFlightById(flightID));
+            System.out.println(bookingsService.GetFlightBooking(clientID_FS.getIP(), clientID_FS.getPort(), flightID));
 
             // Service 4
             System.out.println("Service 4 - Add To Monitoring");
             System.out.println(String.format("Trying to add %s to monitoring list for flight %d", clientID_FS, flightID));
-            flightService.AddToMonitorList(clientID_FS.getIP(), clientID_FS.getPort(), flightID, LocalDateTime.of(2023, 3, 30, 12, 0, 0));
-            System.out.println(flightService.GetMonitorList());
+            monitoringService.AddToMonitorList(clientID_FS.getIP(), clientID_FS.getPort(), flightID, LocalDateTime.of(2023, 3, 30, 12, 0, 0));
+            System.out.println(monitoringService.GetMonitorList());
         };
     }
 }

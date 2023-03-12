@@ -1,6 +1,7 @@
-package com.example.demo.models;
+package com.example.demo.server.impl.servant.models.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.example.demo.server.impl.servant.models.Bookings;
+import com.example.demo.server.impl.servant.models.ClientID;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -13,12 +14,12 @@ import java.util.Optional;
 
 @Repository
 @Transactional(readOnly = false)
-public interface FlightBookingsRepository extends PagingAndSortingRepository<FlightBookings, ClientID> {
+public interface BookingsRepository extends PagingAndSortingRepository<Bookings, ClientID> {
         // For service 3 & 5 - make seat reservation by specifying the flight identifier
         // and the number of seats to reserve
         // Check if clientID and flightID exists in the database
         @Query(value = "SELECT * FROM Flight_Bookings WHERE client_ip = :clientIP AND client_port = :clientPort AND flight_identifier = :flightID", nativeQuery = true)
-        Optional<FlightBookings> findFlightBookingsByClientIDAndFlightID(
+        Optional<Bookings> findFlightBookingsByClientIDAndFlightID(
                 @Param("clientIP") String clientIP,
                 @Param("clientPort") int clientPort,
                 @Param("flightID") int flightID);
@@ -53,5 +54,5 @@ public interface FlightBookingsRepository extends PagingAndSortingRepository<Fli
                 @Param("seatAvailability") int seatAvailability);
 
         @Query(value = "SELECT * FROM Flight_Bookings", nativeQuery = true)
-        List<FlightBookings> findAllFlightBookings();
+        List<Bookings> findAllFlightBookings();
 }

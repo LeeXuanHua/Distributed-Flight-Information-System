@@ -1,6 +1,7 @@
-package com.example.demo.models;
+package com.example.demo.server.impl.servant.models.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.example.demo.server.impl.servant.models.ClientID;
+import com.example.demo.server.impl.servant.models.Monitoring;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -14,13 +15,13 @@ import java.util.Optional;
 
 @Repository
 @Transactional(readOnly = false)
-public interface FlightMonitoringRepository extends PagingAndSortingRepository<FlightMonitoring, ClientID> {
+public interface MonitoringRepository extends PagingAndSortingRepository<Monitoring, ClientID> {
     // For service 4 - monitor updates made to seat availability information of a flight at the server through callback
     // for a designated time period (monitor interval)
 
     // Check if clientID and flightID exists in the database
     @Query(value = "SELECT * FROM Flight_Monitoring WHERE client_ip = :clientIP AND client_port = :clientPort AND flight_identifier = :flightID", nativeQuery = true)
-    Optional<FlightMonitoring> findFlightMonitoringByClientIDAndFlightID(
+    Optional<Monitoring> findFlightMonitoringByClientIDAndFlightID(
             @Param("clientIP") String clientIP,
             @Param("clientPort") int clientPort,
             @Param("flightID") int flightID);
@@ -55,8 +56,8 @@ public interface FlightMonitoringRepository extends PagingAndSortingRepository<F
             @Param("flightID") int flightID);
 
     @Query(value = "SELECT * FROM Flight_Monitoring WHERE flight_identifier = :flightID", nativeQuery = true)
-    List<FlightMonitoring> findFlightMonitoringByFlightId(@Param("flightID") int flightID);
+    List<Monitoring> findFlightMonitoringByFlightId(@Param("flightID") int flightID);
 
     @Query(value = "SELECT * FROM Flight_Monitoring", nativeQuery = true)
-    List<FlightMonitoring> findAllFlightMonitoring();
+    List<Monitoring> findAllFlightMonitoring();
 }

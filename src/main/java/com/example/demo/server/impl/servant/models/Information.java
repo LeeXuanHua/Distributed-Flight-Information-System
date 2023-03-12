@@ -1,4 +1,4 @@
-package com.example.demo.models;
+package com.example.demo.server.impl.servant.models;
 
 import javax.persistence.*;
 
@@ -7,7 +7,7 @@ import javax.persistence.*;
  */
 @Entity(name="Flight_Information")
 @Table(name="flight_information")
-public class FlightInformation {
+public class Information {
     @Id
 //    @SequenceGenerator(
 //            name = "flightID_sequence",
@@ -32,7 +32,7 @@ public class FlightInformation {
     @Column(name = "seat_availability", nullable = false)
     private int seatAvailability;
 
-    public FlightInformation(int flightID, String src, String dest, String departureTime, double airfare, int seatAvailability) {
+    public Information(int flightID, String src, String dest, String departureTime, double airfare, int seatAvailability) {
         this.flightID = flightID;
         this.src = src;
         this.dest = dest;
@@ -41,7 +41,7 @@ public class FlightInformation {
         this.seatAvailability = seatAvailability;
     }
 
-    public FlightInformation() {}
+    public Information() {}
 
     public int getFlightID() {
         return flightID;
