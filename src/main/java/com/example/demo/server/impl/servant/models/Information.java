@@ -1,6 +1,7 @@
 package com.example.demo.server.impl.servant.models;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * Contains flight identifier, source, destination, departure time, airfare, and seat availability
@@ -26,13 +27,13 @@ public class Information {
     @Column(name = "destination", nullable = false)
     private String dest;
     @Column(name = "departure_time", nullable = false)
-    private String departureTime;
+    private LocalDateTime departureTime;
     @Column(name = "airfare", nullable = false)
     private double airfare;
     @Column(name = "seat_availability", nullable = false)
     private int seatAvailability;
 
-    public Information(int flightID, String src, String dest, String departureTime, double airfare, int seatAvailability) {
+    public Information(int flightID, String src, String dest, LocalDateTime departureTime, double airfare, int seatAvailability) {
         this.flightID = flightID;
         this.src = src;
         this.dest = dest;
@@ -67,11 +68,11 @@ public class Information {
         this.dest = dest;
     }
 
-    public String getDepartureTime() {
+    public LocalDateTime getDepartureTime() {
         return departureTime;
     }
 
-    public void setDepartureTime(String departureTime) {
+    public void setDepartureTime(LocalDateTime departureTime) {
         this.departureTime = departureTime;
     }
 

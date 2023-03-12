@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +42,7 @@ public class Application {
             int flightID = faker.number().numberBetween(1, 100);
             String src = faker.country().name();
             String dest = faker.country().name();
-            String departureTime = faker.name().fullName();
+            LocalDateTime departureTime = LocalDateTime.now();
             double airfare = faker.number().randomDouble(2, 100, 1000);
             int seatAvailability = faker.number().numberBetween(1, 100);
 
@@ -172,7 +173,7 @@ public class Application {
             // Service 4
             System.out.println("Service 4 - Add To Monitoring");
             System.out.println(String.format("Trying to add %s to monitoring list for flight %d", clientID_FS, flightID));
-            monitoringService.AddToMonitorList(clientID_FS.getIP(), clientID_FS.getPort(), flightID, LocalDateTime.of(2023, 3, 30, 12, 0, 0));
+            monitoringService.AddToMonitorList(clientID_FS.getIP(), clientID_FS.getPort(), flightID, LocalDateTime.of(2023, 3, 30, 12, 0, 0, 0));
             System.out.println(monitoringService.GetMonitorList());
         };
     }
