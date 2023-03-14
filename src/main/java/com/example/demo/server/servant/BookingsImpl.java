@@ -1,18 +1,17 @@
-package com.example.demo.server.impl.servant;
+package com.example.demo.server.servant;
 
 import java.util.List;
 import java.util.Optional;
 
-import com.example.demo.server.impl.servant.models.Bookings;
-import com.example.demo.server.impl.servant.models.repository.BookingsRepository;
-import com.example.demo.server.impl.servant.models.Information;
-import com.example.demo.server.impl.servant.models.repository.InformationRepository;
-import com.example.demo.server.interfaces.BookingsRemoteInterface;
+import com.example.demo.server.servant.models.Bookings;
+import com.example.demo.server.servant.models.BookingsRepository;
+import com.example.demo.server.servant.models.Information;
+import com.example.demo.server.servant.models.InformationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class BookingsImpl implements BookingsRemoteInterface {
+public class BookingsImpl implements BookingsInterface {
     private InformationImpl informationService;
     private BookingsRepository bookingsRepository;
     private InformationRepository informationRepository;

@@ -1,4 +1,4 @@
-package com.example.demo.server.impl.servant.models;
+package com.example.demo.server.servant.models;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

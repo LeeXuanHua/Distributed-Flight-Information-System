@@ -1,6 +1,6 @@
-package com.example.demo.server.impl.servant.models.repository;
+package com.example.demo.server.servant.models;
 
-import com.example.demo.server.impl.servant.models.Information;
+import com.example.demo.server.servant.models.Information;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;

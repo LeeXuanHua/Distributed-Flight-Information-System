@@ -1,30 +1,77 @@
-package com.example.demo;
+package com.example.demo.server;
 
-import com.example.demo.server.impl.servant.models.*;
-import com.example.demo.server.impl.servant.BookingsImpl;
-import com.example.demo.server.impl.servant.InformationImpl;
-import com.example.demo.server.impl.servant.MonitoringImpl;
-import com.example.demo.server.impl.servant.models.repository.BookingsRepository;
-import com.example.demo.server.impl.servant.models.repository.InformationRepository;
-import com.example.demo.server.impl.servant.models.repository.MonitoringRepository;
+import com.example.demo.server.servant.models.*;
+import com.example.demo.server.servant.BookingsImpl;
+import com.example.demo.server.servant.InformationImpl;
+import com.example.demo.server.servant.MonitoringImpl;
+import com.example.demo.server.servant.models.BookingsRepository;
+import com.example.demo.server.servant.models.InformationRepository;
+import com.example.demo.server.servant.models.MonitoringRepository;
+import com.example.demo.utils.InputValidator;
 import com.github.javafaker.Faker;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
 
 @SpringBootApplication
-public class Application {
-
+@Slf4j
+public class ServerMain {
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        Scanner scanner = new Scanner(System.in);
+
+        // 1. commandLineRunner is first run
+        SpringApplication.run(ServerMain.class, args);
+        log.info("Database seeded with random data.");
+
+        // 2. Let user choose invocation semantics
+        String input;
+        do {
+            System.out.println("===============================");
+            System.out.print("Please select an invocation semantic: \n " +
+                    "1. At-least-once \n " +
+                    "2. At-most-once \n" +
+                    "Your selection (1/2): ");
+            input = scanner.next();
+        } while (InputValidator.isInteger(input, Optional.of(1), Optional.of(2)) == false);
+
+        Server s;
+        try {
+            // 3. Open port and initialise socket
+            int PORT = 2222;
+            DatagramSocket socket = new DatagramSocket(PORT);
+
+            // 4. Inject the chosen invocation semantic as a dependency into Server to facilitate Server's strategy design pattern
+            if (Integer.parseInt(input) == 1) {
+                s = new Server(new AtLeastOnceInvoc(), socket);
+                log.info("You have selected: At-least-once invocation semantics");
+            } else {
+                s = new Server(new AtMostOnceInvoc(), socket);
+                log.info("You have selected: At-most-once invocation semantics");
+            }
+
+            // 5. Pass control over to Server
+            log.info("Started server at IP address {} and port number {}", InetAddress.getLocalHost().getHostAddress(), PORT);
+            while (true) {
+                s.run();
+            }
+
+        } catch (UnknownHostException | SocketException e) {
+            log.error("Error: " + e.getMessage());
+        }
     }
 
-    // Demonstrate the various functions and test the database
+    // 0. Demonstrate the various functions and test the database
     @Bean
     CommandLineRunner commandLineRunner(
             BookingsImpl bookingsService,
@@ -41,7 +88,7 @@ public class Application {
             int flightID = faker.number().numberBetween(1, 100);
             String src = faker.country().name();
             String dest = faker.country().name();
-            String departureTime = faker.name().fullName();
+            LocalDateTime departureTime = LocalDateTime.now();
             double airfare = faker.number().randomDouble(2, 100, 1000);
             int seatAvailability = faker.number().numberBetween(1, 100);
 
@@ -122,7 +169,7 @@ public class Application {
             // flightMonitoringRepository.findAll().forEach(System.out::println);
 
             // Add 1 flight via FlightService instead of FlightInformationRepository
-        //     int flightID_FS = faker.number().numberBetween(1, 100);
+            //     int flightID_FS = faker.number().numberBetween(1, 100);
             int clientSeat_FS = faker.number().numberBetween(1, 100);
             ClientID clientID_FS = new ClientID((String) faker.internet().ipV4Address(), faker.number().numberBetween(1, 100));
 

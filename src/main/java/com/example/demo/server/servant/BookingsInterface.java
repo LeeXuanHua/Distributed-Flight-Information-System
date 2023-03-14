@@ -1,6 +1,6 @@
-package com.example.demo.server.interfaces;
+package com.example.demo.server.servant;
 
-public interface BookingsRemoteInterface {
+public interface BookingsInterface {
     //Service 3
     int AddFlightBooking(String clientIp, int clientPort, int flightId, int numSeats);
 

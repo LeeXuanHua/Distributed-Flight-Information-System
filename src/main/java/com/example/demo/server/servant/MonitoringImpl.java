@@ -1,10 +1,6 @@
-package com.example.demo.server.impl.servant;
+package com.example.demo.server.servant;
 
-import com.example.demo.server.impl.servant.models.*;
-import com.example.demo.server.impl.servant.models.repository.BookingsRepository;
-import com.example.demo.server.impl.servant.models.repository.InformationRepository;
-import com.example.demo.server.impl.servant.models.repository.MonitoringRepository;
-import com.example.demo.server.interfaces.MonitoringRemoteInterface;
+import com.example.demo.server.servant.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class MonitoringImpl implements MonitoringRemoteInterface {
+public class MonitoringImpl implements MonitoringInterface {
     private InformationRepository informationRepository;
     private BookingsRepository bookingsRepository;
     private MonitoringRepository monitoringRepository;

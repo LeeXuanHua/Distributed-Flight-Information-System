@@ -1,8 +1,7 @@
-package com.example.demo.server.impl.servant;
+package com.example.demo.server.servant;
 
-import com.example.demo.server.impl.servant.models.*;
-import com.example.demo.server.impl.servant.models.repository.InformationRepository;
-import com.example.demo.server.interfaces.InformationRemoteInterface;
+import com.example.demo.server.servant.models.Information;
+import com.example.demo.server.servant.models.InformationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class InformationImpl implements InformationRemoteInterface {
+public class InformationImpl implements InformationInterface {
     private InformationRepository informationRepository;
 
     public InformationImpl(@Autowired InformationRepository informationRepository) {
