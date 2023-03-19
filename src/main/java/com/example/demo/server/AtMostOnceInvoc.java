@@ -6,6 +6,7 @@ public class AtMostOnceInvoc implements InvocInterface {
     public AtMostOnceInvoc() {}
     @Override
     public byte[] handleRequest(String hostAddress, int clientRequestId, int clientPort, String unmarshalledData) {
-        return new byte[0];
+        String res = unmarshalledData + " ATMOSTONCE";
+        return res.getBytes();
     }
 }
