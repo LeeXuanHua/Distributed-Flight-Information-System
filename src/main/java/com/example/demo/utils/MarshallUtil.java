@@ -1,8 +1,6 @@
 package com.example.demo.utils;
 
-import java.lang.constant.Constable;
-
-public class MarshallingUnmarshalling {
+public class MarshallUtil {
 
     //todo now it just returns itself
     public static byte[] marshal(byte[] input) {

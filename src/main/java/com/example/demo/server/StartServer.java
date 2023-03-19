@@ -26,26 +26,26 @@ import java.util.Scanner;
 
 @SpringBootApplication
 @Slf4j
-public class ServerMain {
+public class StartServer {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         // 1. commandLineRunner is first run
-        SpringApplication.run(ServerMain.class, args);
+        SpringApplication.run(StartServer.class, args);
         log.info("Database seeded with random data.");
 
         // 2. Let user choose invocation semantics
         String input;
         do {
-            System.out.println("===============================");
+            System.out.println("\n===============================");
             System.out.print("Please select an invocation semantic: \n " +
                     "1. At-least-once \n " +
                     "2. At-most-once \n" +
                     "Your selection (1/2): ");
             input = scanner.next();
-        } while (InputValidator.isInteger(input, Optional.of(1), Optional.of(2)) == false);
+        } while (!InputValidator.isInteger(input, Optional.of(1), Optional.of(2)));
 
-        Server s;
+        AppServer s;
         try {
             // 3. Open port and initialise socket
             int PORT = 2222;
@@ -53,10 +53,10 @@ public class ServerMain {
 
             // 4. Inject the chosen invocation semantic as a dependency into Server to facilitate Server's strategy design pattern
             if (Integer.parseInt(input) == 1) {
-                s = new Server(new AtLeastOnceInvoc(), socket);
+                s = new AppServer(new AtLeastOnceInvoc(), socket);
                 log.info("You have selected: At-least-once invocation semantics");
             } else {
-                s = new Server(new AtMostOnceInvoc(), socket);
+                s = new AppServer(new AtMostOnceInvoc(), socket);
                 log.info("You have selected: At-most-once invocation semantics");
             }
 
