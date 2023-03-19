@@ -2,6 +2,8 @@ package com.example.demo.server;
 
 import com.example.demo.server.servant.InvocInterface;
 import com.example.demo.utils.MarshallingUnmarshalling;
+import com.example.demo.utils.ReqOrReplyEnum;
+import com.example.demo.utils.Simulate;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -44,7 +46,9 @@ public class Server {
 
             // 4. Send the reply, accounting for the chance of simulated failure
             DatagramPacket replyPacket = new DatagramPacket(marshalledReply, marshalledReply.length, clientAddress, clientPort);
-            socket.send(replyPacket);
+            if (!(Simulate.isFailure(ReqOrReplyEnum.REPLY))) {
+                socket.send(replyPacket);
+            }
 
         } catch (IOException e) {
             log.error("IOError: " + e.getMessage());

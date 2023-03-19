@@ -13,7 +13,7 @@ import java.util.Scanner;
 @Slf4j
 public class Simulate {
     public static int FAILURE_RATE;
-    public static boolean isFailure(String reqOrReply) throws FileNotFoundException, URISyntaxException {
+    public static boolean isFailure(ReqOrReplyEnum reqOrReplyEnum) throws FileNotFoundException {
         // 1. Read in our config file
         Scanner in = new Scanner(new FileReader(Paths.get("").toAbsolutePath() + "/src/main/java/com/example/demo/utils/" + "Failure.txt"));
         StringBuilder sb = new StringBuilder();
@@ -39,7 +39,11 @@ public class Simulate {
         int randInt = rand.nextInt(100)+1;
 
         if (randInt <= FAILURE_RATE) {
-            log.warn("Loss of {} message occurred! :(", reqOrReply.toLowerCase());
+            if (reqOrReplyEnum == ReqOrReplyEnum.REPLY) {
+                log.warn("Loss of reply message occurred! :(");
+            } else {
+                log.warn("Loss of request message occurred! :(");
+            }
             return true;
         } else {
             return false;
