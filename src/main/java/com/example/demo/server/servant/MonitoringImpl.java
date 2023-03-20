@@ -1,6 +1,8 @@
 package com.example.demo.server.servant;
 
+import com.example.demo.server.MessageService;
 import com.example.demo.server.servant.models.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,15 +14,14 @@ import java.util.Optional;
 @Service
 public class MonitoringImpl implements MonitoringInterface {
     private InformationRepository informationRepository;
-    private BookingsRepository bookingsRepository;
     private MonitoringRepository monitoringRepository;
+    private MessageService messageService;
 
     public MonitoringImpl(@Autowired InformationRepository informationRepository,
-                          @Autowired BookingsRepository bookingsRepository,
                           @Autowired MonitoringRepository monitoringRepository) {
         this.informationRepository = informationRepository;
-        this.bookingsRepository = bookingsRepository;
         this.monitoringRepository = monitoringRepository;
+        this.messageService = MessageService.getInstance();
     }
 
     //Service 4
@@ -52,15 +53,11 @@ public class MonitoringImpl implements MonitoringInterface {
             if (now.isAfter(monitor.getExpiry())) {
                 expiredMonitors.add(monitor);
             } else {
-                SendUpdate(monitor);
+                messageService.sendMessageToClient(monitor.getClientID(), monitor.toString().getBytes());
             }
         }
         //lazy cleanup of expired monitoring channels
         CleanUpMonitorList(expiredMonitors);
-    }
-
-    private void SendUpdate(Monitoring monitor) {
-        //TODO: add logic to send updates
     }
 
     private void CleanUpMonitorList(List<Monitoring> monitors) {
