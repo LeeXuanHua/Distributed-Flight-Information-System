@@ -31,18 +31,19 @@ public class AppClient {
             String choice;
             do {
                 System.out.println("\n===============================");
-                System.out.println("Service 1: Lol");
-                System.out.println("Service 2: Lmao");
-                System.out.println("Service 3: xd");
-                System.out.println("Service 4: lmfao");
-                System.out.println("Service 5: rofl");
-                System.out.println("Service 6: yuh");
+                System.out.println("Service 1: Get Flights by Source & Destination");
+                System.out.println("Service 2: Get Flights by ID");
+                System.out.println("Service 3: Book seats on a flight");
+                System.out.println("Service 4: Monitor flight availability");
+                System.out.println("Service 5: Delete flight booking");
+                System.out.println("Service 6: Update flight booking");
                 System.out.print("Make your selection (1-6): ");
                 choice = scanner.next();
             } while (!InputValidator.isInteger(choice, Optional.of(1), Optional.of(6)));
 
+            String requestString = ClientServices.getService(choice, scanner);
             // 2. Construct and marshall request
-            byte[] unmarshalledRequest = (++MESSAGE_ID + " | " + choice + " | goofy ahh message").getBytes();
+            byte[] unmarshalledRequest = (++MESSAGE_ID + " | " + choice + " | " + requestString).getBytes();
             byte[] marshalledRequest = MarshallUtil.marshal(unmarshalledRequest);
             DatagramPacket requestPacket = new DatagramPacket(marshalledRequest, marshalledRequest.length);
 
@@ -61,6 +62,7 @@ public class AppClient {
             byte[] unmarshalledReply = MarshallUtil.unmarshall(marshalledReply);
 
             // todo send request again if did not receive a reply, i.e. if step 4 did not run within TIMEOUT seconds, then run step 2 again
+            // TODO: add polling when monitor is chosen
 
         // anything requiring a socket function will need to have this catch block
         } catch (IOException e) {

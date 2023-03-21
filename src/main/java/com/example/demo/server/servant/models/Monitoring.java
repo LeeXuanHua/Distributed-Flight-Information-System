@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Table(name = "flight_monitoring", uniqueConstraints = {
         @UniqueConstraint(name = "uniqueClientID", columnNames = {"client_ip", "client_port"})
 })
-public class Monitoring {
+public class Monitoring implements DataEntity {
     @EmbeddedId
     private ClientID clientID;
 

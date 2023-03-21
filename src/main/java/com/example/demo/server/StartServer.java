@@ -219,7 +219,7 @@ public class StartServer {
             // Service 4
             System.out.println("Service 4 - Add To Monitoring");
             System.out.println(String.format("Trying to add %s to monitoring list for flight %d", clientID_FS, flightID));
-            monitoringService.AddToMonitorList(clientID_FS.getIP(), clientID_FS.getPort(), flightID, LocalDateTime.of(2023, 3, 30, 12, 0, 0));
+            monitoringService.AddToMonitorList(clientID_FS.getIP(), clientID_FS.getPort(), flightID, 10);
             System.out.println(monitoringService.GetMonitorList());
         };
     }

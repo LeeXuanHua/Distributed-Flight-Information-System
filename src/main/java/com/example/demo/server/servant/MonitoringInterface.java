@@ -4,5 +4,5 @@ import java.time.LocalDateTime;
 
 public interface MonitoringInterface {
     //Service 4
-    void AddToMonitorList(String clientIp, int clientPort, int flightId, LocalDateTime expiry);
+    void AddToMonitorList(String clientIp, int clientPort, int flightId, int monitorDuration);
 }

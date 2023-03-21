@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
  */
 @Entity(name="Flight_Information")
 @Table(name="flight_information")
-public class Information {
+public class Information implements DataEntity {
     @Id
 //    @SequenceGenerator(
 //            name = "flightID_sequence",

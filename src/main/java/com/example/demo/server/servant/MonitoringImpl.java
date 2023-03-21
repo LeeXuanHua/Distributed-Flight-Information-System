@@ -26,7 +26,8 @@ public class MonitoringImpl implements MonitoringInterface {
 
     //Service 4
     @Override
-    public void AddToMonitorList(String clientIp, int clientPort, int flightId, LocalDateTime expiry) {
+    public void AddToMonitorList(String clientIp, int clientPort, int flightId, int monitorDuration) {
+        LocalDateTime expiry = LocalDateTime.now().plusSeconds(monitorDuration);
         Optional<Information> existingFlight = this.informationRepository.findFlightsByFlightID(flightId);
         if (!existingFlight.isPresent()) {
             return;
