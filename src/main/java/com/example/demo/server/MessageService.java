@@ -31,7 +31,7 @@ public class MessageService {
 
     public void sendMessageToClient(InetAddress clientAddress, int clientPort, byte[] unmarshalledMessage) {
         try {
-            byte[] marshalledMessage = MarshallUtil.marshal(unmarshalledMessage);
+            byte[] marshalledMessage = MarshallUtil.marshall(unmarshalledMessage);
 
             // Send message, accounting for the chance of simulated failure
             DatagramPacket messagePacket = new DatagramPacket(marshalledMessage, marshalledMessage.length, clientAddress, clientPort);

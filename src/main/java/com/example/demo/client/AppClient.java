@@ -49,7 +49,7 @@ public class AppClient {
             String requestString = ClientServices.getService(choice, scanner);
             // 2. Construct and marshall request
             byte[] unmarshalledRequest = (++MESSAGE_ID + " | " + choice + " | " + requestString).getBytes();
-            byte[] marshalledRequest = MarshallUtil.marshal(unmarshalledRequest);
+            byte[] marshalledRequest = MarshallUtil.marshall(unmarshalledRequest);
             DatagramPacket requestPacket = new DatagramPacket(marshalledRequest, marshalledRequest.length);
 
             // 3. If did not simulate a request message loss, then send request
