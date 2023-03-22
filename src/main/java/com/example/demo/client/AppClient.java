@@ -1,5 +1,6 @@
 package com.example.demo.client;
 
+import com.example.demo.server.servant.InvocInterface;
 import com.example.demo.utils.InputValidator;
 import com.example.demo.utils.MarshallUtil;
 import com.example.demo.utils.ReqOrReplyEnum;
@@ -10,18 +11,22 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Scanner;
 
 @Slf4j
 public class AppClient {
+    private InvocInterface invocInterface;
     DatagramSocket socket;
 
     int MESSAGE_ID;
 
-    public AppClient(DatagramSocket socket) {
+    // TODO: implement invoc semantics logic
+    public AppClient(InvocInterface invocInterface, DatagramSocket socket) {
         this.socket = socket;
         this.MESSAGE_ID = 0;
+        this.invocInterface = invocInterface;
     }
 
     public void run() {
@@ -54,19 +59,37 @@ public class AppClient {
             }
 
             // 4. Listen for reply and unmarshall
-            byte[] replyBuffer = new byte[1024];
-            DatagramPacket replyPacket = new DatagramPacket(replyBuffer, replyBuffer.length);
-            socket.receive(replyPacket);
-            log.info("Reply received: " + new String(replyPacket.getData(), StandardCharsets.UTF_8).trim());
-            byte[] marshalledReply = replyPacket.getData();
-            byte[] unmarshalledReply = MarshallUtil.unmarshall(marshalledReply);
+            byte[] unmarshalledReply = receiveMessage();
 
             // todo send request again if did not receive a reply, i.e. if step 4 did not run within TIMEOUT seconds, then run step 2 again
-            // TODO: add polling when monitor is chosen
+            
+            // Handle flight monitoring
+            if (Integer.parseInt(choice) == 4) {
+                LocalDateTime expiry = LocalDateTime.now().plusSeconds(30); //temporarily hardcoded. TODO: get expiry time from unmarshalled reply, check w xh
+                handleCallback(expiry);
+            }
 
         // anything requiring a socket function will need to have this catch block
         } catch (IOException e) {
             log.error("IOError: " + e.getMessage());
         }
+    }
+
+    public void handleCallback(LocalDateTime expiryTime) throws IOException {
+        while (LocalDateTime.now().isBefore(expiryTime)) {
+            byte[] unmarshalledReply = receiveMessage();
+            // TODO: check w xh how to parse to objects
+        }
+    }
+
+    public byte[] receiveMessage() throws IOException {
+        byte[] replyBuffer = new byte[1024];
+        DatagramPacket replyPacket = new DatagramPacket(replyBuffer, replyBuffer.length);
+        socket.receive(replyPacket);
+        log.info("Reply received: " + new String(replyPacket.getData(), StandardCharsets.UTF_8).trim());
+        byte[] marshalledReply = replyPacket.getData();
+        byte[] unmarshalledReply = MarshallUtil.unmarshall(marshalledReply);
+
+        return unmarshalledReply;
     }
 }

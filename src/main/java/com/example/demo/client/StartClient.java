@@ -1,5 +1,7 @@
 package com.example.demo.client;
 
+import com.example.demo.client.AtLeastOnceInvoc;
+import com.example.demo.client.AtMostOnceInvoc;
 import com.example.demo.utils.InputValidator;
 import lombok.extern.slf4j.Slf4j;
 
@@ -7,7 +9,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.Optional;
 import java.util.Scanner;
 
 @Slf4j
@@ -24,26 +25,28 @@ public class StartClient {
             input = scanner.next();
         } while (!InputValidator.isValidIp(input));
 
-        // 2. Get port
-        String port;
-        do {
-            System.out.println("\n===============================");
-            System.out.print("Please input the port of the server: ");
-            port = scanner.next();
-        } while (!InputValidator.isInteger(port, Optional.empty(), Optional.empty()));
+        int PORT = 2222;
 
-        // 3. Initiate socket connection
+        // 2. Initiate socket connection
         try {
             socket = new DatagramSocket();
-            socket.connect(InetAddress.getByName(input), Integer.parseInt(port));
+            socket.connect(InetAddress.getByName(input), PORT);
         } catch (SocketException | UnknownHostException e) {
             log.error("Socket or UnknownHost Error: " + e.getMessage());
         }
 
-        // 4. Let the client run
-        AppClient c = new AppClient(socket);
+        AppClient client;
+        // 3. Inject the chosen invocation semantic as a dependency into Client to facilitate Client's strategy design pattern
+        if (Integer.parseInt(input) == 1) {
+            client = new AppClient(new AtLeastOnceInvoc(), socket);
+            log.info("You have selected: At-least-once invocation semantics");
+        } else {
+            client = new AppClient(new AtMostOnceInvoc(), socket);
+            log.info("You have selected: At-most-once invocation semantics");
+        }
+
         while (true) {
-            c.run();
+            client.run();
         }
     }
 }
