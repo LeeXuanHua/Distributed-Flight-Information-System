@@ -9,27 +9,31 @@ public class MarshallUtil {
     public static final int FLOAT_SIZE = 4;
     public static final int DOUBLE_SIZE = 8;
 
-//    //todo now it just returns itself
-//    public static byte[] marshal(byte[] input) {
-//        byte[] res = input;
-//        return res;
-//    }
-//
-//    //todo now it just returns itself
-//    public static byte[] unmarshall(byte[] input) {
-//        byte[] res = input;
-//        return res;
-//    }
+    //todo add List<Object> parsing since some queries are returning a list of objects rather than a single object
+    //todo add Optional<Object> parsing since some queries are returning an Optional object rather than a single object
+    //todo add Header class to wrap the message and add the header to the message (to discuss with Wayne)
 
-    public static byte[] marshall(Object obj) {
-        List<Byte> message = new ArrayList<Byte>();
-
-        // Parsing the object and appending the message
-        marshallParsing(message, obj);
-
-        // Convert the list of Bytes to 1 array of Bytes
-        return MarshallUtil.byteUnboxing(message);
+    //todo now it just returns itself
+    public static byte[] marshall(byte[] input) {
+        byte[] res = input;
+        return res;
     }
+
+    //todo now it just returns itself
+    public static byte[] unmarshall(byte[] input) {
+        byte[] res = input;
+        return res;
+    }
+
+//    public static byte[] marshall(Object obj) {
+//        List<Byte> message = new ArrayList<Byte>();
+//
+//        // Parsing the object and appending the message
+//        marshallParsing(message, obj);
+//
+//        // Convert the list of Bytes to 1 array of Bytes
+//        return MarshallUtil.byteUnboxing(message);
+//    }
 
     public static void marshallParsing(List<Byte> message, Object obj) {
         // Append the class name to the message
@@ -59,17 +63,17 @@ public class MarshallUtil {
         }
     }
 
-    public static Object unmarshall(byte[] b) {
-        int ptr = 0;    // Pointer to the current position in the byte array
-
-        // Parsing the object and populating object fields
-        Map<Object, Integer> objectAndPtr = unmarshallParsing(b, ptr);
-
-        // Extract the object and the latest pointer from the HashMap
-        Object obj = objectAndPtr.keySet().iterator().next();
-
-        return obj;
-    }
+//    public static Object unmarshall(byte[] b) {
+//        int ptr = 0;    // Pointer to the current position in the byte array
+//
+//        // Parsing the object and populating object fields
+//        Map<Object, Integer> objectAndPtr = unmarshallParsing(b, ptr);
+//
+//        // Extract the object and the latest pointer from the HashMap
+//        Object obj = objectAndPtr.keySet().iterator().next();
+//
+//        return obj;
+//    }
 
     public static Map<Object, Integer> unmarshallParsing(byte[] b, int ptr) {
         // Create a HashMap to store the object and the latest pointer
