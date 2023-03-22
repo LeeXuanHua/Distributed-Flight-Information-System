@@ -1,6 +1,9 @@
 package com.example.demo.utils;
 
+import com.example.demo.server.servant.models.Time;
+
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class MarshallUtil {
@@ -50,11 +53,16 @@ public class MarshallUtil {
                 // Based on the field type, call the appropriate method
                 // Size is appended to message and its field value is marshalled
                 switch (type) {
-                    case "java.lang.String" -> appendMessage(message, (String) o);
+                    case "java.lang.String", "String" -> appendMessage(message, (String) o);
                     case "java.lang.Integer", "int" -> appendMessage(message, (int) o);
                     case "java.lang.Long", "long" -> appendMessage(message, (long) o);
                     case "java.lang.Float", "float" -> appendMessage(message, (float) o);
                     case "java.lang.Double", "double" -> appendMessage(message, (double) o);
+                    case "java.time.LocalDateTime", "LocalDateTime" -> {
+                        // Convert LocalDateTime to our custom Time class (as required by project)
+                        Time t = Time.fromDateTime((LocalDateTime) o);
+                        marshallParsing(message, t);
+                    }
                     default -> marshallParsing(message, o);
                 }
             } catch (IllegalAccessException e) {
@@ -106,7 +114,7 @@ public class MarshallUtil {
             ptr += INT_SIZE;
 
             switch (type) {
-                case "java.lang.String" -> {
+                case "java.lang.String", "String" -> {
                     String stringValue = unmarshallString(b, ptr, ptr + sourceLength);
                     ptr += sourceLength;
                     set(obj, field.getName(), stringValue);
@@ -116,7 +124,7 @@ public class MarshallUtil {
                     ptr += sourceLength;
                     set(obj, field.getName(), intValue);
                 }
-                case "java.lang.long", "long" -> {
+                case "java.lang.Long", "long" -> {
                     long longValue = unmarshallLong(b, ptr);
                     ptr += sourceLength;
                     set(obj, field.getName(), longValue);
@@ -130,6 +138,14 @@ public class MarshallUtil {
                     double doubleValue = unmarshallDouble(b, ptr);
                     ptr += sourceLength;
                     set(obj, field.getName(), doubleValue);
+                }
+                case "java.time.LocalDateTime", "LocalDateTime" -> {    // Used LocalDateTime here instead of Time because we are inspecting the original class
+                    // Unmarshall the Time object and convert it to LocalDateTime
+                    Map<Object, Integer> nestedObjAndPtr = unmarshallParsing(b, ptr-4);
+                    Object nestedObj = nestedObjAndPtr.keySet().iterator().next();
+                    ptr = nestedObjAndPtr.get(nestedObj);
+                    LocalDateTime localDateTime = ((Time) nestedObj).toDateTime();
+                    set(obj, field.getName(), localDateTime);
                 }
                 default -> {
                     // Backtrack the ptr 4 bytes since we extracted the sourceLength earlier
