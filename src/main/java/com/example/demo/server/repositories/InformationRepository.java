@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.models.Information;
+import com.example.demo.server.servant.models.Information;
 
 import java.util.List;
 import java.util.Optional;

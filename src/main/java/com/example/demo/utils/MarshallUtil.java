@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import com.example.demo.models.Time;
+import com.example.demo.server.servant.models.Time;
 
 public class MarshallUtil {
     public static final int INT_SIZE = 4;

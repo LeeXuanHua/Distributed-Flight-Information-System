@@ -1,6 +1,6 @@
 package com.example.demo.server;
 
-import com.example.demo.models.*;
+import com.example.demo.server.servant.models.*;
 import com.example.demo.server.repositories.BookingsRepository;
 import com.example.demo.server.repositories.InformationRepository;
 import com.example.demo.server.repositories.MonitoringRepository;

@@ -7,7 +7,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 
-import com.example.demo.models.ClientID;
+import com.example.demo.server.servant.models.ClientID;
 import com.example.demo.utils.MarshallUtil;
 import com.example.demo.utils.ReqOrReplyEnum;
 import com.example.demo.utils.Simulate;

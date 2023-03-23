@@ -1,7 +1,7 @@
 package com.example.demo.client;
 
-import com.example.demo.models.ClientRequest;
-import com.example.demo.models.Monitoring;
+import com.example.demo.server.servant.models.ClientRequest;
+import com.example.demo.server.servant.models.Monitoring;
 import com.example.demo.utils.InputValidator;
 import com.example.demo.utils.MarshallUtil;
 import com.example.demo.utils.ReqOrReplyEnum;

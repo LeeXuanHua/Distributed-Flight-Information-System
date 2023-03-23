@@ -2,7 +2,7 @@ package com.example.demo.client;
 
 import java.util.Scanner;
 
-import com.example.demo.models.ClientRequest;
+import com.example.demo.server.servant.models.ClientRequest;
 
 public class ClientServices {
     public static ClientRequest getService(int messageId, String serviceId, Scanner scanner) {

@@ -3,7 +3,7 @@ package com.example.demo.server.servant;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.demo.models.Information;
+import com.example.demo.server.servant.models.Information;
 
 public interface InformationInterface {
     //Service 1
