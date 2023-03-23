@@ -1,13 +1,14 @@
-package com.example.demo.server.servant.models;
+package com.example.demo.server.repositories;
 
-import com.example.demo.server.servant.models.Bookings;
-import com.example.demo.server.servant.models.ClientID;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.example.demo.models.Bookings;
+import com.example.demo.models.ClientID;
 
 import java.util.List;
 import java.util.Optional;

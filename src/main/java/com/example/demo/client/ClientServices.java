@@ -31,7 +31,7 @@ public class ClientServices {
         System.out.print("Please input your desired flight destination: ");
         String dst = scanner.next();
 
-        return KeyValueToString("src", src) + KeyValueToString("dst", dst);
+        return KeyValueToString("serviceId", "1") + KeyValueToString("src", src) + KeyValueToString("dst", dst);
     }
 
     private static String getFlightsById(Scanner scanner) {
@@ -39,7 +39,7 @@ public class ClientServices {
         System.out.print("Please input the ID of your desired flight: ");
         String flightId = scanner.next();
 
-        return KeyValueToString("flightId", flightId);
+        return KeyValueToString("serviceId", "2") + KeyValueToString("flightId", flightId);
     }
 
     private static String addBooking(Scanner scanner) {
@@ -50,7 +50,7 @@ public class ClientServices {
         System.out.print("Please input the number of seats you would like to book: ");
         String numSeats = scanner.next();
 
-        return KeyValueToString("flightId", flightId) + KeyValueToString("numSeats", numSeats);
+        return KeyValueToString("serviceId", "3") + KeyValueToString("flightId", flightId) + KeyValueToString("numSeats", numSeats);
     }
 
     private static String monitorFlight(Scanner scanner) {
@@ -61,7 +61,7 @@ public class ClientServices {
         System.out.print("Please input the duration you would like to monitor for (in seconds): ");
         String monitorDuration = scanner.next();
 
-        return KeyValueToString("flightId", flightId) + KeyValueToString("monitorDuration", monitorDuration);
+        return KeyValueToString("serviceId", "4") + KeyValueToString("flightId", flightId) + KeyValueToString("monitorDuration", monitorDuration);
     }
 
     private static String deleteBooking(Scanner scanner) {
@@ -69,7 +69,7 @@ public class ClientServices {
         System.out.print("Please input the ID of your desired flight: ");
         String flightId = scanner.next();
 
-        return KeyValueToString("flightId", flightId);
+        return KeyValueToString("serviceId", "5") + KeyValueToString("flightId", flightId);
     }
 
     private static String updateBooking(Scanner scanner) {
@@ -80,7 +80,7 @@ public class ClientServices {
         System.out.print("Please input the number of seats you would like to increase your booking by: ");
         String numSeats = scanner.next();
 
-        return KeyValueToString("flightId", flightId) + KeyValueToString("numSeats", numSeats);
+        return KeyValueToString("serviceId", "6") + KeyValueToString("flightId", flightId) + KeyValueToString("numSeats", numSeats);
     }
 
     private static String KeyValueToString(String key, String value) {

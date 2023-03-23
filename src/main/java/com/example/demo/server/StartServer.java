@@ -1,12 +1,12 @@
 package com.example.demo.server;
 
-import com.example.demo.server.servant.models.*;
+import com.example.demo.models.*;
+import com.example.demo.server.repositories.BookingsRepository;
+import com.example.demo.server.repositories.InformationRepository;
+import com.example.demo.server.repositories.MonitoringRepository;
 import com.example.demo.server.servant.BookingsImpl;
 import com.example.demo.server.servant.InformationImpl;
 import com.example.demo.server.servant.MonitoringImpl;
-import com.example.demo.server.servant.models.BookingsRepository;
-import com.example.demo.server.servant.models.InformationRepository;
-import com.example.demo.server.servant.models.MonitoringRepository;
 import com.example.demo.utils.InputValidator;
 import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;

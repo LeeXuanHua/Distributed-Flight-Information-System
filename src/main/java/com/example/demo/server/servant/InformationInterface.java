@@ -1,9 +1,9 @@
 package com.example.demo.server.servant;
 
-import com.example.demo.server.servant.models.Information;
-
 import java.util.List;
 import java.util.Optional;
+
+import com.example.demo.models.Information;
 
 public interface InformationInterface {
     //Service 1

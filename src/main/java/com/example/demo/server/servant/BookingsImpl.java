@@ -3,12 +3,13 @@ package com.example.demo.server.servant;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.demo.server.servant.models.Bookings;
-import com.example.demo.server.servant.models.BookingsRepository;
-import com.example.demo.server.servant.models.Information;
-import com.example.demo.server.servant.models.InformationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.example.demo.models.Bookings;
+import com.example.demo.models.Information;
+import com.example.demo.server.repositories.BookingsRepository;
+import com.example.demo.server.repositories.InformationRepository;
 
 @Service
 public class BookingsImpl implements BookingsInterface {
