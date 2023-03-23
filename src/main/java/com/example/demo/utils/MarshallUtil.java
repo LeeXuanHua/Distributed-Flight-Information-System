@@ -61,6 +61,21 @@ public class MarshallUtil {
         return MarshallUtil.byteUnboxing(message);
     }
 
+    public static byte[] marshall(List<Object> objList) {
+        List<Byte> message = new ArrayList<Byte>();
+
+        // Append the classname and number of objects to the message
+        appendMessage(message, objList.getClass().getTypeName());
+        appendMessage(message, objList.size());
+
+        // Parsing the object and appending the message
+        for (Object obj : objList)
+            marshallParsing(message, obj);
+
+        // Convert the list of Bytes to 1 array of Bytes
+        return MarshallUtil.byteUnboxing(message);
+    }
+
     public static void marshallParsing(List<Byte> message, Object obj) {
         // Append the class name to the message
         appendMessage(message, obj.getClass().getTypeName());
@@ -119,6 +134,7 @@ public class MarshallUtil {
         // Create an instance of the object based on the class name
         Object obj = null;
         try {
+            // If the class is Optional
             if (className.equals(Optional.class.getTypeName())) {
                 // Optional classes cannot be instantiated using the default constructor (therefore, we need to handle this specially)
                 // For optional classes, we need to check if the values are present
@@ -143,6 +159,32 @@ public class MarshallUtil {
                 objectAndPtr.put(obj, ptr);
                 return objectAndPtr;
 
+            // If the class is ArrayList
+            } else if (className.equals(ArrayList.class.getTypeName())) {
+                // ArrayList classes cannot be instantiated using the default constructor
+                // For ArrayList, we create an empty ArrayList and recursively call unmarshallParsing, adding the objects to the ArrayList
+
+                // Recall the format: <classname length> <classname> <INT_SIZE> <# of elements>
+                int nextByteToRead = unmarshallInt(b, ptr); // exhaust the byte denoting <INT_SIZE>
+                ptr += INT_SIZE;
+                int elemCount = unmarshallInt(b, ptr); // this is the byte that tells us if the ArrayList object is present or not
+                ptr += INT_SIZE;
+
+                // Create an empty ArrayList
+                List<Object> arrList = new ArrayList<>();
+
+                for (int i = 0; i < elemCount; i++) {
+                    Map<Object, Integer> arrayListObjAndPtr = unmarshallParsing(b, ptr);
+                    obj = arrayListObjAndPtr.keySet().iterator().next();
+                    ptr = arrayListObjAndPtr.values().iterator().next();
+
+                    arrList.add(obj);
+                }
+
+                objectAndPtr.put(arrList, ptr);
+                return objectAndPtr;
+
+            // For all other classes (as of now, assuming they are custom classes)
             } else {
                 obj = Class.forName(className).getDeclaredConstructor().newInstance();
             }
