@@ -1,6 +1,5 @@
 package com.example.demo.client;
 
-import com.example.demo.server.servant.InvocInterface;
 import com.example.demo.utils.InputValidator;
 import com.example.demo.utils.MarshallUtil;
 import com.example.demo.utils.ReqOrReplyEnum;
@@ -10,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -17,16 +18,13 @@ import java.util.Scanner;
 
 @Slf4j
 public class AppClient {
-    private InvocInterface invocInterface;
     DatagramSocket socket;
 
     int MESSAGE_ID;
 
-    // TODO: implement invoc semantics logic
-    public AppClient(InvocInterface invocInterface, DatagramSocket socket) {
+    public AppClient(DatagramSocket socket) {
         this.socket = socket;
         this.MESSAGE_ID = 0;
-        this.invocInterface = invocInterface;
     }
 
     public void run() {
@@ -52,16 +50,7 @@ public class AppClient {
             byte[] marshalledRequest = MarshallUtil.marshall(unmarshalledRequest);
             DatagramPacket requestPacket = new DatagramPacket(marshalledRequest, marshalledRequest.length);
 
-            // 3. If did not simulate a request message loss, then send request
-            if (!(Simulate.isFailure(ReqOrReplyEnum.REQUEST))) {
-                socket.send(requestPacket);
-                log.info("Sending request. The message before marshalling is: " + new String(unmarshalledRequest, StandardCharsets.UTF_8));
-            }
-
-            // 4. Listen for reply and unmarshall
-            byte[] unmarshalledReply = receiveMessage();
-
-            // todo send request again if did not receive a reply, i.e. if step 4 did not run within TIMEOUT seconds, then run step 2 again
+            byte[] unmarshalledReply = handleRequest(requestPacket);
             
             // Handle flight monitoring
             if (Integer.parseInt(choice) == 4) {
@@ -75,21 +64,48 @@ public class AppClient {
         }
     }
 
-    public void handleCallback(LocalDateTime expiryTime) throws IOException {
+    private void handleCallback(LocalDateTime expiryTime) throws IOException {
         while (LocalDateTime.now().isBefore(expiryTime)) {
-            byte[] unmarshalledReply = receiveMessage();
+            byte[] replyBuffer = new byte[1024];
+            DatagramPacket replyPacket = new DatagramPacket(replyBuffer, replyBuffer.length);
+            socket.receive(replyPacket);
+            log.info("Reply received: " + new String(replyPacket.getData(), StandardCharsets.UTF_8).trim());
+            byte[] marshalledReply = replyPacket.getData();
+            byte[] unmarshalledReply = MarshallUtil.unmarshall(marshalledReply);
             // TODO: check w xh how to parse to objects
         }
     }
 
-    public byte[] receiveMessage() throws IOException {
+    private byte[] receiveReply(DatagramPacket requestPacket) throws IOException {
         byte[] replyBuffer = new byte[1024];
         DatagramPacket replyPacket = new DatagramPacket(replyBuffer, replyBuffer.length);
-        socket.receive(replyPacket);
-        log.info("Reply received: " + new String(replyPacket.getData(), StandardCharsets.UTF_8).trim());
+        boolean receivedReply = false;
+
+        // Listen for reply
+        // If did not simulate a request message loss, then send request
+        while (!receivedReply) {
+            try {
+                socket.receive(replyPacket);
+                receivedReply = true;
+            } catch (SocketTimeoutException e) {
+                sendRequest(socket, requestPacket);
+            }
+        }
+
         byte[] marshalledReply = replyPacket.getData();
         byte[] unmarshalledReply = MarshallUtil.unmarshall(marshalledReply);
-
         return unmarshalledReply;
+    }
+
+    private byte[] handleRequest(DatagramPacket requestPacket) throws SocketException, IOException {
+        socket.setSoTimeout(5000);
+        sendRequest(socket, requestPacket);
+        return receiveReply(requestPacket);
+    }
+
+    private void sendRequest(DatagramSocket socket, DatagramPacket requestPacket) throws IOException {
+        if (!(Simulate.isFailure(ReqOrReplyEnum.REQUEST))) {
+            socket.send(requestPacket);
+        }
     }
 }

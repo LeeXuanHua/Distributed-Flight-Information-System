@@ -1,7 +1,5 @@
 package com.example.demo.client;
 
-import com.example.demo.client.AtLeastOnceInvoc;
-import com.example.demo.client.AtMostOnceInvoc;
 import com.example.demo.utils.InputValidator;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,15 +33,7 @@ public class StartClient {
             log.error("Socket or UnknownHost Error: " + e.getMessage());
         }
 
-        AppClient client;
-        // 3. Inject the chosen invocation semantic as a dependency into Client to facilitate Client's strategy design pattern
-        if (Integer.parseInt(input) == 1) {
-            client = new AppClient(new AtLeastOnceInvoc(), socket);
-            log.info("You have selected: At-least-once invocation semantics");
-        } else {
-            client = new AppClient(new AtMostOnceInvoc(), socket);
-            log.info("You have selected: At-most-once invocation semantics");
-        }
+        AppClient client = new AppClient(socket);
 
         while (true) {
             client.run();

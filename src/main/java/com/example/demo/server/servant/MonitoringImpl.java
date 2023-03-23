@@ -49,12 +49,14 @@ public class MonitoringImpl implements MonitoringInterface {
     void SendUpdateToMonitorList(int flightId) {
         List<Monitoring> expiredMonitors = new ArrayList<>();
         List<Monitoring> monitors = monitoringRepository.findFlightMonitoringByFlightId(flightId);
+        Information updatedFlight = informationRepository.findFlightsByFlightID(flightId).get();
+
         LocalDateTime now = LocalDateTime.now();
         for (Monitoring monitor : monitors) {
             if (now.isAfter(monitor.getExpiry())) {
                 expiredMonitors.add(monitor);
             } else {
-                messageService.sendMessageToClient(monitor.getClientID(), monitor.toString().getBytes());
+                messageService.sendMessageToClient(monitor.getClientID(), updatedFlight.toString().getBytes());
             }
         }
         //lazy cleanup of expired monitoring channels
