@@ -120,9 +120,10 @@ public class MarshallUtil {
         Object obj = null;
         try {
             if (className.equals(Optional.class.getTypeName())) {
-                // Optional classes cannot be instantiated using the default constructor
-                // For optional classes to reach here, we have already checked that they are present
-                // Therefore, we can safely create an Optional object amd recursively call unmarshallParsing
+                // Optional classes cannot be instantiated using the default constructor (therefore, we need to handle this specially)
+                // For optional classes, we need to check if the values are present
+                // If so, we can safely create an Optional object amd recursively call unmarshallParsing
+                // Otherwise, we can just return an empty Optional object
 
                 // Recall the format: <classname length> <classname> <INT_SIZE> <isPresent()>
                 int nextByteToRead = unmarshallInt(b, ptr); // exhaust the byte denoting <INT_SIZE>
