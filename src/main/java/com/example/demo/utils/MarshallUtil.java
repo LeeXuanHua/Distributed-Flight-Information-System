@@ -28,15 +28,15 @@ public class MarshallUtil {
         return res;
     }
 
-//    public static byte[] marshall(Object obj) {
-//        List<Byte> message = new ArrayList<Byte>();
-//
-//        // Parsing the object and appending the message
-//        marshallParsing(message, obj);
-//
-//        // Convert the list of Bytes to 1 array of Bytes
-//        return MarshallUtil.byteUnboxing(message);
-//    }
+   public static byte[] marshall(Object obj) {
+       List<Byte> message = new ArrayList<Byte>();
+
+       // Parsing the object and appending the message
+       marshallParsing(message, obj);
+
+       // Convert the list of Bytes to 1 array of Bytes
+       return MarshallUtil.byteUnboxing(message);
+   }
 
     public static void marshallParsing(List<Byte> message, Object obj) {
         // Append the class name to the message

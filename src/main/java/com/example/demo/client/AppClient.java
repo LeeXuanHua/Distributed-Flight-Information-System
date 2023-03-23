@@ -1,5 +1,6 @@
 package com.example.demo.client;
 
+import com.example.demo.models.ClientRequest;
 import com.example.demo.utils.InputValidator;
 import com.example.demo.utils.MarshallUtil;
 import com.example.demo.utils.ReqOrReplyEnum;
@@ -44,10 +45,9 @@ public class AppClient {
                 choice = scanner.next();
             } while (!InputValidator.isInteger(choice, Optional.of(1), Optional.of(6)));
 
-            String requestString = ClientServices.getService(choice, scanner);
             // 2. Construct and marshall request
-            byte[] unmarshalledRequest = (++MESSAGE_ID + " | " + choice + " | " + requestString).getBytes();
-            byte[] marshalledRequest = MarshallUtil.marshall(unmarshalledRequest);
+            ClientRequest clientRequest = ClientServices.getService(++MESSAGE_ID, choice, scanner);
+            byte[] marshalledRequest = MarshallUtil.marshall(clientRequest);
             DatagramPacket requestPacket = new DatagramPacket(marshalledRequest, marshalledRequest.length);
 
             byte[] unmarshalledReply = handleRequest(requestPacket);

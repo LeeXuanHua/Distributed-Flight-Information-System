@@ -2,28 +2,29 @@ package com.example.demo.client;
 
 import java.util.Scanner;
 
-// TODO: clarify with xh unmarshalled data format
+import com.example.demo.models.ClientRequest;
+
 public class ClientServices {
-    public static String getService(String serviceId, Scanner scanner) {
+    public static ClientRequest getService(int messageId, String serviceId, Scanner scanner) {
         switch (serviceId) {
             case "1":
-                return getFlightsBySrcAndDst(scanner);
+                return getFlightsBySrcAndDst(messageId, scanner);
             case "2":
-                return getFlightsById(scanner);
+                return getFlightsById(messageId, scanner);
             case "3":
-                return addBooking(scanner);
+                return addBooking(messageId, scanner);
             case "4":
-                return monitorFlight(scanner);
+                return monitorFlight(messageId, scanner);
             case "5":
-                return deleteBooking(scanner);
+                return deleteBooking(messageId, scanner);
             case "6":
-                return updateBooking(scanner);
+                return updateBooking(messageId, scanner);
             default:
-                return "Invalid Service Id";
+                return null;
         }
     }
 
-    private static String getFlightsBySrcAndDst(Scanner scanner) {
+    private static ClientRequest getFlightsBySrcAndDst(int messageId, Scanner scanner) {
         System.out.println("You have selected Service 1: Get Flights by Source & Destination");
         System.out.print("Please input your desired flight source: ");
         String src = scanner.next();
@@ -31,18 +32,22 @@ public class ClientServices {
         System.out.print("Please input your desired flight destination: ");
         String dst = scanner.next();
 
-        return KeyValueToString("serviceId", "1") + KeyValueToString("src", src) + KeyValueToString("dst", dst);
+        String requestBody = KeyValueToString("src", src) + KeyValueToString("dst", dst);
+        ClientRequest clientRequest = new ClientRequest(messageId, 1, requestBody);
+        return clientRequest;
     }
 
-    private static String getFlightsById(Scanner scanner) {
+    private static ClientRequest getFlightsById(int messageId, Scanner scanner) {
         System.out.println("You have selected Service 2: Get Flights by ID");
         System.out.print("Please input the ID of your desired flight: ");
         String flightId = scanner.next();
 
-        return KeyValueToString("serviceId", "2") + KeyValueToString("flightId", flightId);
+        String requestBody = KeyValueToString("flightId", flightId);
+        ClientRequest clientRequest = new ClientRequest(messageId, 2, requestBody);
+        return clientRequest;
     }
 
-    private static String addBooking(Scanner scanner) {
+    private static ClientRequest addBooking(int messageId, Scanner scanner) {
         System.out.println("You have selected Service 3: Book seats on a flight");
         System.out.print("Please input the ID of your desired flight: ");
         String flightId = scanner.next();
@@ -50,10 +55,12 @@ public class ClientServices {
         System.out.print("Please input the number of seats you would like to book: ");
         String numSeats = scanner.next();
 
-        return KeyValueToString("serviceId", "3") + KeyValueToString("flightId", flightId) + KeyValueToString("numSeats", numSeats);
+        String requestBody = KeyValueToString("flightId", flightId) + KeyValueToString("numSeats", numSeats);
+        ClientRequest clientRequest = new ClientRequest(messageId, 3, requestBody);
+        return clientRequest;
     }
 
-    private static String monitorFlight(Scanner scanner) {
+    private static ClientRequest monitorFlight(int messageId, Scanner scanner) {
         System.out.println("You have selected Service 4: Monitor flight availability");
         System.out.print("Please input the ID of your desired flight: ");
         String flightId = scanner.next();
@@ -61,18 +68,22 @@ public class ClientServices {
         System.out.print("Please input the duration you would like to monitor for (in seconds): ");
         String monitorDuration = scanner.next();
 
-        return KeyValueToString("serviceId", "4") + KeyValueToString("flightId", flightId) + KeyValueToString("monitorDuration", monitorDuration);
+        String requestBody = KeyValueToString("flightId", flightId) + KeyValueToString("monitorDuration", monitorDuration);
+        ClientRequest clientRequest = new ClientRequest(messageId, 4, requestBody);
+        return clientRequest;
     }
 
-    private static String deleteBooking(Scanner scanner) {
+    private static ClientRequest deleteBooking(int messageId, Scanner scanner) {
         System.out.println("You have selected Service 5: Delete flight booking");
         System.out.print("Please input the ID of your desired flight: ");
         String flightId = scanner.next();
 
-        return KeyValueToString("serviceId", "5") + KeyValueToString("flightId", flightId);
+        String requestBody = KeyValueToString("flightId", flightId);
+        ClientRequest clientRequest = new ClientRequest(messageId, 5, requestBody);
+        return clientRequest;
     }
 
-    private static String updateBooking(Scanner scanner) {
+    private static ClientRequest updateBooking(int messageId, Scanner scanner) {
         System.out.println("You have selected Service 6: Update flight booking");
         System.out.print("Please input the ID of your desired flight: ");
         String flightId = scanner.next();
@@ -80,7 +91,9 @@ public class ClientServices {
         System.out.print("Please input the number of seats you would like to increase your booking by: ");
         String numSeats = scanner.next();
 
-        return KeyValueToString("serviceId", "6") + KeyValueToString("flightId", flightId) + KeyValueToString("numSeats", numSeats);
+        String requestBody = KeyValueToString("flightId", flightId) + KeyValueToString("numSeats", numSeats);
+        ClientRequest clientRequest = new ClientRequest(messageId, 6, requestBody);
+        return clientRequest;
     }
 
     private static String KeyValueToString(String key, String value) {
