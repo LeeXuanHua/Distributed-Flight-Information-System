@@ -1,6 +1,7 @@
 package com.example.demo.client;
 
 import com.example.demo.models.ClientRequest;
+import com.example.demo.models.Monitoring;
 import com.example.demo.utils.InputValidator;
 import com.example.demo.utils.MarshallUtil;
 import com.example.demo.utils.ReqOrReplyEnum;
@@ -50,11 +51,13 @@ public class AppClient {
             byte[] marshalledRequest = MarshallUtil.marshall(clientRequest);
             DatagramPacket requestPacket = new DatagramPacket(marshalledRequest, marshalledRequest.length);
 
-            byte[] unmarshalledReply = handleRequest(requestPacket);
+            Object responseObject = handleRequest(requestPacket);
+            System.out.println("Response: " + responseObject);
             
             // Handle flight monitoring
             if (Integer.parseInt(choice) == 4) {
-                LocalDateTime expiry = LocalDateTime.now().plusSeconds(30); //temporarily hardcoded. TODO: get expiry time from unmarshalled reply, check w xh
+                Monitoring monitor = (Monitoring) responseObject;
+                LocalDateTime expiry = monitor.getExpiry();
                 handleCallback(expiry);
             }
 
@@ -69,14 +72,16 @@ public class AppClient {
             byte[] replyBuffer = new byte[1024];
             DatagramPacket replyPacket = new DatagramPacket(replyBuffer, replyBuffer.length);
             socket.receive(replyPacket);
-            log.info("Reply received: " + new String(replyPacket.getData(), StandardCharsets.UTF_8).trim());
+
+            if (LocalDateTime.now().isAfter(expiryTime)) break;
+
             byte[] marshalledReply = replyPacket.getData();
-            byte[] unmarshalledReply = MarshallUtil.unmarshall(marshalledReply);
-            // TODO: check w xh how to parse to objects
+            Object updatedFlight = MarshallUtil.unmarshall(marshalledReply);
+            System.out.println("The seat availability of the flight has changed to " + updatedFlight);
         }
     }
 
-    private byte[] receiveReply(DatagramPacket requestPacket) throws IOException {
+    private Object receiveReply(DatagramPacket requestPacket) throws IOException {
         byte[] replyBuffer = new byte[1024];
         DatagramPacket replyPacket = new DatagramPacket(replyBuffer, replyBuffer.length);
         boolean receivedReply = false;
@@ -86,6 +91,7 @@ public class AppClient {
         while (!receivedReply) {
             try {
                 socket.receive(replyPacket);
+                log.info("Reply received: " + new String(replyPacket.getData(), StandardCharsets.UTF_8).trim());
                 receivedReply = true;
             } catch (SocketTimeoutException e) {
                 sendRequest(socket, requestPacket);
@@ -93,11 +99,11 @@ public class AppClient {
         }
 
         byte[] marshalledReply = replyPacket.getData();
-        byte[] unmarshalledReply = MarshallUtil.unmarshall(marshalledReply);
+        Object unmarshalledReply = MarshallUtil.unmarshall(marshalledReply);
         return unmarshalledReply;
     }
 
-    private byte[] handleRequest(DatagramPacket requestPacket) throws SocketException, IOException {
+    private Object handleRequest(DatagramPacket requestPacket) throws SocketException, IOException {
         socket.setSoTimeout(5000);
         sendRequest(socket, requestPacket);
         return receiveReply(requestPacket);
