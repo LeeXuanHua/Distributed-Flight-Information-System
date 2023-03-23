@@ -28,7 +28,7 @@ public class MarshallUtil {
         return res;
     }
 
-   public static byte[] marshall(Object obj) {
+    public static byte[] marshall(Object obj) {
        List<Byte> message = new ArrayList<Byte>();
 
        // Parsing the object and appending the message
@@ -36,7 +36,30 @@ public class MarshallUtil {
 
        // Convert the list of Bytes to 1 array of Bytes
        return MarshallUtil.byteUnboxing(message);
-   }
+    }
+
+    public static byte[] marshall(Optional obj) {
+        List<Byte> message = new ArrayList<Byte>();
+
+        // Check if the object is present
+        // If present - append the Optional class name and 0 to the message, and process it as per normal
+        // If not present - append the Optional class name and 0 to the message, and terminate
+        if (obj.isPresent()) {
+            // Append the classname and number of objects to the message
+            appendMessage(message, obj.getClass().getTypeName());
+            appendMessage(message, 1);
+
+            // Parsing the object and appending the message
+            marshallParsing(message, obj.get());
+        } else {
+            // Append the classname and number of objects to the message
+            appendMessage(message, obj.getClass().getTypeName());
+            appendMessage(message, 0);
+        }
+
+        // Convert the list of Bytes to 1 array of Bytes
+        return MarshallUtil.byteUnboxing(message);
+    }
 
     public static void marshallParsing(List<Byte> message, Object obj) {
         // Append the class name to the message
@@ -96,7 +119,32 @@ public class MarshallUtil {
         // Create an instance of the object based on the class name
         Object obj = null;
         try {
-            obj = Class.forName(className).getDeclaredConstructor().newInstance();
+            if (className.equals(Optional.class.getTypeName())) {
+                // Optional classes cannot be instantiated using the default constructor
+                // For optional classes to reach here, we have already checked that they are present
+                // Therefore, we can safely create an Optional object amd recursively call unmarshallParsing
+
+                // Recall the format: <classname length> <classname> <INT_SIZE> <isPresent()>
+                int nextByteToRead = unmarshallInt(b, ptr); // exhaust the byte denoting <INT_SIZE>
+                ptr += INT_SIZE;
+                int available = unmarshallInt(b, ptr); // this is the byte that tells us if the optional object is present or not
+                ptr += INT_SIZE;
+
+                if (available == 0) {   // if the optional object is not present
+                    obj = Optional.empty();
+
+                } else {                // if the optional object is present
+                    Map<Object, Integer> optionalObjAndPtr = unmarshallParsing(b, ptr);
+                    obj = Optional.of(optionalObjAndPtr.keySet().iterator().next());
+                    ptr = optionalObjAndPtr.values().iterator().next();
+                }
+
+                objectAndPtr.put(obj, ptr);
+                return objectAndPtr;
+
+            } else {
+                obj = Class.forName(className).getDeclaredConstructor().newInstance();
+            }
         } catch (Exception e) {
             e.printStackTrace();
             throw new IllegalStateException(e);
