@@ -42,10 +42,11 @@ public class AppServer {
             InetAddress clientAddress = requestPacket.getAddress();
             int clientPort = requestPacket.getPort();
             String requestString = new String(requestPacket.getData(), StandardCharsets.UTF_8).trim();
-            byte[] marshalledData = requestString.getBytes();
-            Object unmarshalledData = MarshallUtil.unmarshall(marshalledData);
             System.out.println("reqStr" + requestString);
-            System.out.println("unmarshalled" + unmarshalledData);
+            byte[] marshalledData = requestString.getBytes();
+            Object unmarshalledData = MarshallUtil.unmarshallString(requestString, 0, requestString.length());
+            System.out.println("unmarshalled is " + unmarshalledData);
+            System.out.println("end");
 
 
             //todo this will not work if the requestId is more than one digit i.e. >= 10

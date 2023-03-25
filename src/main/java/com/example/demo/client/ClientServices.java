@@ -98,6 +98,6 @@ public class ClientServices {
     }
 
     private static String KeyValueToString(String key, String value) {
-        return key + " | " + value + " | ";
+        return key + ":" + value + " | ";
     }
 }
