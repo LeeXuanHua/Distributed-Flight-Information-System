@@ -198,28 +198,28 @@ public class StartServer {
             // Service 3
             System.out.println("Service 3 - Add Flight Booking");
             System.out.println(String.format("Trying to add %s to flight %d with seat %d", clientID_FS, flightID, clientSeat_FS));
-            System.out.println(bookingsService.AddFlightBooking(clientID_FS.getIP(), clientID_FS.getPort(), flightID, clientSeat_FS));
+            System.out.println(bookingsService.AddFlightBooking(clientID_FS, flightID, clientSeat_FS));
             System.out.println(informationService.GetFlightById(flightID));
-            System.out.println(bookingsService.GetFlightBooking(clientID_FS.getIP(), clientID_FS.getPort(), flightID));
+            System.out.println(bookingsService.GetFlightBooking(clientID_FS, flightID));
 
             // Service 6
             System.out.println("Service 6 - Update Flight Booking");
             System.out.println(String.format("Trying to update %s in flight %d by increasing num of seats by %d", clientID_FS, flightID, clientSeat_FS));
-            System.out.println(bookingsService.UpdateFlightBooking(clientID_FS.getIP(), clientID_FS.getPort(), flightID, clientSeat_FS));
+            System.out.println(bookingsService.UpdateFlightBooking(clientID_FS, flightID, clientSeat_FS));
             System.out.println(informationService.GetFlightById(flightID));
-            System.out.println(bookingsService.GetFlightBooking(clientID_FS.getIP(), clientID_FS.getPort(), flightID));
+            System.out.println(bookingsService.GetFlightBooking(clientID_FS, flightID));
 
             // Service 5
             System.out.println("Service 5 - Remove Flight Booking");
             System.out.println(String.format("Trying to remove %s from flight %d", clientID_FS, flightID));
-            System.out.println(bookingsService.DeleteFlightBooking(clientID_FS.getIP(), clientID_FS.getPort(), flightID));
+            System.out.println(bookingsService.DeleteFlightBooking(clientID_FS, flightID));
             System.out.println(informationService.GetFlightById(flightID));
-            System.out.println(bookingsService.GetFlightBooking(clientID_FS.getIP(), clientID_FS.getPort(), flightID));
+            System.out.println(bookingsService.GetFlightBooking(clientID_FS, flightID));
 
             // Service 4
             System.out.println("Service 4 - Add To Monitoring");
             System.out.println(String.format("Trying to add %s to monitoring list for flight %d", clientID_FS, flightID));
-            System.out.println(monitoringService.AddToMonitorList(clientID_FS.getIP(), clientID_FS.getPort(), flightID, 10));
+            System.out.println(monitoringService.AddToMonitorList(clientID_FS, flightID, 10));
             System.out.println(monitoringService.GetAllMonitorList());
         };
     }

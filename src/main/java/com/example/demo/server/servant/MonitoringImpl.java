@@ -28,21 +28,21 @@ public class MonitoringImpl implements MonitoringInterface {
 
     //Service 4
     @Override
-    public Optional<Monitoring> AddToMonitorList(String clientIp, int clientPort, int flightId, int monitorDuration) {
+    public Optional<Monitoring> AddToMonitorList(ClientID clientID, int flightId, int monitorDuration) {
         LocalDateTime expiry = LocalDateTime.now().plusSeconds(monitorDuration);
         Optional<Information> existingFlight = this.informationRepository.findFlightsByFlightID(flightId);
         if (!existingFlight.isPresent()) {
             return Optional.empty();
         }
 
-        Optional<Monitoring> existingMonitor = monitoringRepository.findFlightMonitoringByClientIDAndFlightID(clientIp, clientPort, flightId);
+        Optional<Monitoring> existingMonitor = monitoringRepository.findFlightMonitoringByClientIDAndFlightID(clientID.getIP(), clientID.getPort(), flightId);
         if (existingMonitor.isPresent()) {
-            monitoringRepository.updateFlightMonitoringByClientIDAndFlightID(clientIp, clientPort, flightId, expiry);
-            return monitoringRepository.findFlightMonitoringByClientIDAndFlightID(clientIp, clientPort, flightId);
+            monitoringRepository.updateFlightMonitoringByClientIDAndFlightID(clientID.getIP(), clientID.getPort(), flightId, expiry);
+            return monitoringRepository.findFlightMonitoringByClientIDAndFlightID(clientID.getIP(), clientID.getPort(), flightId);
         }
 
-        monitoringRepository.insertFlightMonitoringByClientIDAndFlightID(clientIp, clientPort, flightId, expiry);
-        return monitoringRepository.findFlightMonitoringByClientIDAndFlightID(clientIp, clientPort, flightId);
+        monitoringRepository.insertFlightMonitoringByClientIDAndFlightID(clientID.getIP(), clientID.getPort(), flightId, expiry);
+        return monitoringRepository.findFlightMonitoringByClientIDAndFlightID(clientID.getIP(), clientID.getPort(), flightId);
     }
 
     public List<Monitoring> GetAllMonitorList() {
