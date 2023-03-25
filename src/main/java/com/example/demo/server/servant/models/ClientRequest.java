@@ -34,4 +34,9 @@ public class ClientRequest {
     public void setRequestBody(String requestBody) {
         this.requestBody = requestBody;
     }
+
+    @Override
+    public String toString() {
+        return "ID is " + this.getMessageId() + " and service called is " + this.getServiceId() + " and message is " + this.getRequestBody();
+    }
 }

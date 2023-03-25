@@ -20,6 +20,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -27,7 +28,14 @@ import java.util.Scanner;
 @SpringBootApplication
 @Slf4j
 public class StartServer {
+
+    public static InvocationAtLeastOnce invocationAtLeastOnce;
+    public static InvocationAtMostOnce invocationAtMostOnce;
+
     public static void main(String[] args) {
+
+
+
         Scanner scanner = new Scanner(System.in);
 
         // 1. commandLineRunner is first run
@@ -53,10 +61,10 @@ public class StartServer {
 
             // 4. Inject the chosen invocation semantic as a dependency into Server to facilitate Server's strategy design pattern
             if (Integer.parseInt(input) == 1) {
-                s = new AppServer(new AtLeastOnceInvoc(), socket);
+                s = new AppServer(invocationAtLeastOnce, socket);
                 log.info("You have selected: At-least-once invocation semantics");
             } else {
-                s = new AppServer(new AtMostOnceInvoc(), socket);
+                s = new AppServer(invocationAtMostOnce, socket);
                 log.info("You have selected: At-most-once invocation semantics");
             }
 
@@ -80,7 +88,18 @@ public class StartServer {
             InformationRepository informationRepository,
             BookingsRepository bookingsRepository,
             MonitoringRepository monitoringRepository) {
+        invocationAtLeastOnce = new InvocationAtLeastOnce(bookingsService, monitoringService, informationService);
+        invocationAtMostOnce = new InvocationAtMostOnce(bookingsService, monitoringService, informationService);
         return args -> {
+            // Seeding for TESTING: 1-4
+            informationRepository.save(new Information(1, "Singapore", "China",
+                    LocalDateTime.of(2023, Month.JANUARY, 1, 1, 1, 1),
+                    10.00, 10));
+
+            // Seeding for TESTING: 5-6
+            ClientID lol = new ClientID("12345", 8080);
+            bookingsRepository.save(new Bookings(lol, 1, 1));
+
             // FlightInformationRepository
             // Create a fake record
             Faker faker = new Faker();

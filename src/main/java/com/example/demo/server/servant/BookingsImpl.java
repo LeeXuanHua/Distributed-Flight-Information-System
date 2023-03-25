@@ -3,6 +3,7 @@ package com.example.demo.server.servant;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.demo.utils.InsufficientSeatsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,9 +52,14 @@ public class BookingsImpl implements BookingsInterface {
         }
 
         int availableSeats = existingFlight.get().getSeatAvailability();
-        int actualBookedSeats = numSeats <= availableSeats ? numSeats : availableSeats ;
-        bookingsRepository.insertFlightBookings(clientID.getIP(), clientID.getPort(), flightID, actualBookedSeats);
-        informationRepository.updateFlightsSeatAvailability(flightID, availableSeats - actualBookedSeats);
+
+        if (numSeats > availableSeats) {
+            throw new InsufficientSeatsException();
+        }
+
+//        int actualBookedSeats = numSeats <= availableSeats ? numSeats : availableSeats ;
+        bookingsRepository.insertFlightBookings(clientID.getIP(), clientID.getPort(), flightID, numSeats);
+        informationRepository.updateFlightsSeatAvailability(flightID, availableSeats - numSeats);
         monitoringService.SendUpdateToMonitorList(flightID);
         return GetFlightBooking(clientID, flightID);
     }

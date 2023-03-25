@@ -53,6 +53,7 @@ public class AppClient {
 
             // 2. Construct and marshall request
             ClientRequest clientRequest = ClientServices.getService(++MESSAGE_ID, choice, scanner);
+            log.info("client request " + clientRequest.toString());
             byte[] marshalledRequest = MarshallUtil.marshall(clientRequest);
             DatagramPacket requestPacket = new DatagramPacket(marshalledRequest, marshalledRequest.length);
 
@@ -113,6 +114,7 @@ public class AppClient {
 
     private Object handleRequest(DatagramPacket requestPacket) throws SocketException, IOException {
         socket.setSoTimeout(5000);
+        log.info("Resending request");
         sendRequest(socket, requestPacket);
         return receiveReply(requestPacket);
     }

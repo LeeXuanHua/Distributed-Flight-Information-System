@@ -45,20 +45,25 @@ public class ClientID implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         ClientID clientID = (ClientID) o;
-        return IP.equals(clientID.IP) && (port == clientID.port);
+
+        if (port != clientID.port) return false;
+        return Objects.equals(IP, clientID.IP);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(IP, port);
+        int result = IP != null ? IP.hashCode() : 0;
+        result = 31 * result + port;
+        return result;
     }
 
-    @Override
-    public String toString() {
-        return "ClientID{" +
-                "IP='" + IP + '\'' +
-                ", port=" + port +
-                '}';
-    }
+    //    @Override
+//    public String toString() {
+//        return "ClientID{" +
+//                "IP='" + IP + '\'' +
+//                ", port=" + port +
+//                '}';
+//    }
 }

@@ -29,7 +29,7 @@ public class MessageService {
         return INSTANCE;
     }
 
-    public void sendMessageToClient(InetAddress clientAddress, int clientPort, byte[] unmarshalledMessage) {
+    public void sendMessageToClient(InetAddress clientAddress, int clientPort, Object unmarshalledMessage) {
         try {
             byte[] marshalledMessage = MarshallUtil.marshall(unmarshalledMessage);
 
@@ -37,7 +37,7 @@ public class MessageService {
             DatagramPacket messagePacket = new DatagramPacket(marshalledMessage, marshalledMessage.length, clientAddress, clientPort);
             if (!(Simulate.isFailure(ReqOrReplyEnum.REPLY))) {
                 socket.send(messagePacket);
-                log.info("Sending reply. The message before marshalling is: " + new String(unmarshalledMessage, StandardCharsets.UTF_8));
+                log.info("Sending reply. The message before marshalling is: " + new String((byte[]) unmarshalledMessage, StandardCharsets.UTF_8));
             }
 
         // anything requiring a socket function will need to have this catch block

@@ -3,6 +3,7 @@ package com.example.demo.client;
 import java.util.Scanner;
 
 import com.example.demo.server.servant.models.ClientRequest;
+import com.example.demo.utils.MarshallUtil;
 
 public class ClientServices {
     public static ClientRequest getService(int messageId, String serviceId, Scanner scanner) {
@@ -33,7 +34,7 @@ public class ClientServices {
         System.out.print("Please input your desired flight destination: ");
         String dst = scanner.nextLine();
 
-        String requestBody = KeyValueToString("src", src) + KeyValueToString("dst", dst);
+        String requestBody = Serialise("src", src) + Serialise("dst", dst);
         ClientRequest clientRequest = new ClientRequest(messageId, 1, requestBody);
         return clientRequest;
     }
@@ -43,7 +44,7 @@ public class ClientServices {
         System.out.print("Please input the ID of your desired flight: ");
         String flightID = scanner.nextLine();
 
-        String requestBody = KeyValueToString("flightID", flightID);
+        String requestBody = Serialise("flightID", flightID);
         ClientRequest clientRequest = new ClientRequest(messageId, 2, requestBody);
         return clientRequest;
     }
@@ -56,7 +57,7 @@ public class ClientServices {
         System.out.print("Please input the number of seats you would like to book: ");
         String numSeats = scanner.nextLine();
 
-        String requestBody = KeyValueToString("flightID", flightID) + KeyValueToString("numSeats", numSeats);
+        String requestBody = Serialise("flightID", flightID) + Serialise("numSeats", numSeats);
         ClientRequest clientRequest = new ClientRequest(messageId, 3, requestBody);
         return clientRequest;
     }
@@ -69,7 +70,7 @@ public class ClientServices {
         System.out.print("Please input the duration you would like to monitor for (in seconds): ");
         String monitorInterval = scanner.nextLine();
 
-        String requestBody = KeyValueToString("flightID", flightID) + KeyValueToString("monitorInterval", monitorInterval);
+        String requestBody = Serialise("flightID", flightID) + Serialise("monitorInterval", monitorInterval);
         ClientRequest clientRequest = new ClientRequest(messageId, 4, requestBody);
         return clientRequest;
     }
@@ -79,7 +80,7 @@ public class ClientServices {
         System.out.print("Please input the ID of your desired flight: ");
         String flightID = scanner.nextLine();
 
-        String requestBody = KeyValueToString("flightID", flightID);
+        String requestBody = Serialise("flightID", flightID);
         ClientRequest clientRequest = new ClientRequest(messageId, 5, requestBody);
         return clientRequest;
     }
@@ -92,12 +93,12 @@ public class ClientServices {
         System.out.print("Please input the number of seats you would like to increase your booking by: ");
         String numSeats = scanner.nextLine();
 
-        String requestBody = KeyValueToString("flightID", flightID) + KeyValueToString("numSeats", numSeats);
+        String requestBody = Serialise("flightID", flightID) + Serialise("numSeats", numSeats);
         ClientRequest clientRequest = new ClientRequest(messageId, 6, requestBody);
         return clientRequest;
     }
 
-    private static String KeyValueToString(String key, String value) {
-        return key + ":" + value + " | ";
+    public static String Serialise(String key, String value) {
+        return key + MarshallUtil.KV_PAIR + value + MarshallUtil.DELIMITER;
     }
 }

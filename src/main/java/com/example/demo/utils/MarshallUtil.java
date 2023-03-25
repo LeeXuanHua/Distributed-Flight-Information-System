@@ -7,6 +7,8 @@ import java.util.*;
 import com.example.demo.server.servant.models.Time;
 
 public class MarshallUtil {
+    public static final char KV_PAIR = ':';
+    public static final char DELIMITER = '|';
     public static final int INT_SIZE = 4;
     public static final int LONG_SIZE = 8;
     public static final int FLOAT_SIZE = 4;
