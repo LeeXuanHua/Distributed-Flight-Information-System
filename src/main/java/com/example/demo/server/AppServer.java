@@ -13,6 +13,8 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class AppServer {
 
+    public static int PORT = 2222;
+
     // at-least-once and at-most-once semantics can be invoked when appropriate using strategy design pattern (.handleRequest())
     private InvocInterface invocInterface;
     private DatagramSocket socket;
@@ -34,21 +36,24 @@ public class AppServer {
             byte[] buffer = new byte[1024];
             DatagramPacket requestPacket = new DatagramPacket(buffer, buffer.length);
             socket.receive(requestPacket);
-            log.info("Request received: " + new String(requestPacket.getData(), StandardCharsets.UTF_8).trim());
 
             // 2. Extract the request identifier ({IP address, port, requestId}) from the packet.
             //    To do this, we need to unmarshall the data at the same time
             InetAddress clientAddress = requestPacket.getAddress();
             int clientPort = requestPacket.getPort();
-            String lol = new String(requestPacket.getData(), StandardCharsets.UTF_8).trim();
-            byte[] marshalledData = lol.getBytes();
-            byte[] unmarshalledData = MarshallUtil.unmarshall(marshalledData);
+            String requestString = new String(requestPacket.getData(), StandardCharsets.UTF_8).trim();
+            byte[] marshalledData = requestString.getBytes();
+            Object unmarshalledData = MarshallUtil.unmarshall(marshalledData);
+            System.out.println("reqStr" + requestString);
+            System.out.println("unmarshalled" + unmarshalledData);
+
+
             //todo this will not work if the requestId is more than one digit i.e. >= 10
             int clientRequestId = unmarshalledData.toString().charAt(0);
 
             // 3. Let the invocInterface handle the request based on the required invocation semantic
             //    Then, marshall the reply
-            byte[] unmarshalledReply = invocInterface.handleRequest(clientAddress.getHostAddress(), clientRequestId, clientPort, lol);
+            byte[] unmarshalledReply = invocInterface.handleRequest(clientAddress.getHostAddress(), clientRequestId, clientPort, requestString);
             messageService.sendMessageToClient(clientAddress, clientPort, unmarshalledReply);
 
         // anything requiring a socket function will need to have this catch block

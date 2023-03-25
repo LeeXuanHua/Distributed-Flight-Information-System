@@ -57,7 +57,6 @@ public class AppClient {
             DatagramPacket requestPacket = new DatagramPacket(marshalledRequest, marshalledRequest.length);
 
             Object responseObject = handleRequest(requestPacket);
-            System.out.println("Response: " + responseObject);
             
             // Handle flight monitoring
             if (Integer.parseInt(choice) == 4) {

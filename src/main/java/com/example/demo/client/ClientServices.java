@@ -6,6 +6,7 @@ import com.example.demo.server.servant.models.ClientRequest;
 
 public class ClientServices {
     public static ClientRequest getService(int messageId, String serviceId, Scanner scanner) {
+        scanner.nextLine();
         switch (serviceId) {
             case "1":
                 return getFlightsBySrcAndDst(messageId, scanner);
@@ -27,10 +28,10 @@ public class ClientServices {
     private static ClientRequest getFlightsBySrcAndDst(int messageId, Scanner scanner) {
         System.out.println("You have selected Service 1: Get Flights by Source & Destination");
         System.out.print("Please input your desired flight source: ");
-        String src = scanner.next();
+        String src = scanner.nextLine();
 
         System.out.print("Please input your desired flight destination: ");
-        String dst = scanner.next();
+        String dst = scanner.nextLine();
 
         String requestBody = KeyValueToString("src", src) + KeyValueToString("dst", dst);
         ClientRequest clientRequest = new ClientRequest(messageId, 1, requestBody);
@@ -40,7 +41,7 @@ public class ClientServices {
     private static ClientRequest getFlightsById(int messageId, Scanner scanner) {
         System.out.println("You have selected Service 2: Get Flights by ID");
         System.out.print("Please input the ID of your desired flight: ");
-        String flightID = scanner.next();
+        String flightID = scanner.nextLine();
 
         String requestBody = KeyValueToString("flightID", flightID);
         ClientRequest clientRequest = new ClientRequest(messageId, 2, requestBody);
@@ -50,10 +51,10 @@ public class ClientServices {
     private static ClientRequest addBooking(int messageId, Scanner scanner) {
         System.out.println("You have selected Service 3: Book seats on a flight");
         System.out.print("Please input the ID of your desired flight: ");
-        String flightID = scanner.next();
+        String flightID = scanner.nextLine();
 
         System.out.print("Please input the number of seats you would like to book: ");
-        String numSeats = scanner.next();
+        String numSeats = scanner.nextLine();
 
         String requestBody = KeyValueToString("flightID", flightID) + KeyValueToString("numSeats", numSeats);
         ClientRequest clientRequest = new ClientRequest(messageId, 3, requestBody);
@@ -63,10 +64,10 @@ public class ClientServices {
     private static ClientRequest monitorFlight(int messageId, Scanner scanner) {
         System.out.println("You have selected Service 4: Monitor flight availability");
         System.out.print("Please input the ID of your desired flight: ");
-        String flightID = scanner.next();
+        String flightID = scanner.nextLine();
 
         System.out.print("Please input the duration you would like to monitor for (in seconds): ");
-        String monitorInterval = scanner.next();
+        String monitorInterval = scanner.nextLine();
 
         String requestBody = KeyValueToString("flightID", flightID) + KeyValueToString("monitorInterval", monitorInterval);
         ClientRequest clientRequest = new ClientRequest(messageId, 4, requestBody);
@@ -76,7 +77,7 @@ public class ClientServices {
     private static ClientRequest deleteBooking(int messageId, Scanner scanner) {
         System.out.println("You have selected Service 5: Delete flight booking");
         System.out.print("Please input the ID of your desired flight: ");
-        String flightID = scanner.next();
+        String flightID = scanner.nextLine();
 
         String requestBody = KeyValueToString("flightID", flightID);
         ClientRequest clientRequest = new ClientRequest(messageId, 5, requestBody);
@@ -86,10 +87,10 @@ public class ClientServices {
     private static ClientRequest updateBooking(int messageId, Scanner scanner) {
         System.out.println("You have selected Service 6: Update flight booking");
         System.out.print("Please input the ID of your desired flight: ");
-        String flightID = scanner.next();
+        String flightID = scanner.nextLine();
 
         System.out.print("Please input the number of seats you would like to increase your booking by: ");
-        String numSeats = scanner.next();
+        String numSeats = scanner.nextLine();
 
         String requestBody = KeyValueToString("flightID", flightID) + KeyValueToString("numSeats", numSeats);
         ClientRequest clientRequest = new ClientRequest(messageId, 6, requestBody);

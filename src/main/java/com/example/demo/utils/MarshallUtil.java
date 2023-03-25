@@ -16,17 +16,17 @@ public class MarshallUtil {
     //todo add Optional<Object> parsing since some queries are returning an Optional object rather than a single object
     //todo add Header class to wrap the message and add the header to the message (to discuss with Wayne)
 
-    //todo now it just returns itself
-    public static byte[] marshall(byte[] input) {
-        byte[] res = input;
-        return res;
-    }
-
-    //todo now it just returns itself
-    public static byte[] unmarshall(byte[] input) {
-        byte[] res = input;
-        return res;
-    }
+//    //todo now it just returns itself
+//    public static byte[] marshall(byte[] input) {
+//        byte[] res = input;
+//        return res;
+//    }
+//
+//    //todo now it just returns itself
+//    public static byte[] unmarshall(byte[] input) {
+//        byte[] res = input;
+//        return res;
+//    }
 
     public static byte[] marshall(Object obj) {
        List<Byte> message = new ArrayList<Byte>();
@@ -76,7 +76,7 @@ public class MarshallUtil {
         return MarshallUtil.byteUnboxing(message);
     }
 
-    public static void marshallParsing(List<Byte> message, Object obj) {
+    private static void marshallParsing(List<Byte> message, Object obj) {
         // Append the class name to the message
         appendMessage(message, obj.getClass().getTypeName());
 
@@ -109,19 +109,19 @@ public class MarshallUtil {
         }
     }
 
-//    public static Object unmarshall(byte[] b) {
-//        int ptr = 0;    // Pointer to the current position in the byte array
-//
-//        // Parsing the object and populating object fields
-//        Map<Object, Integer> objectAndPtr = unmarshallParsing(b, ptr);
-//
-//        // Extract the object and the latest pointer from the HashMap
-//        Object obj = objectAndPtr.keySet().iterator().next();
-//
-//        return obj;
-//    }
+    public static Object unmarshall(byte[] b) {
+        int ptr = 0;    // Pointer to the current position in the byte array
 
-    public static Map<Object, Integer> unmarshallParsing(byte[] b, int ptr) {
+        // Parsing the object and populating object fields
+        Map<Object, Integer> objectAndPtr = unmarshallParsing(b, ptr);
+
+        // Extract the object and the latest pointer from the HashMap
+        Object obj = objectAndPtr.keySet().iterator().next();
+
+        return obj;
+    }
+
+    private static Map<Object, Integer> unmarshallParsing(byte[] b, int ptr) {
         // Create a HashMap to store the object and the latest pointer
         Map<Object, Integer> objectAndPtr = new HashMap<>();
 
@@ -254,7 +254,7 @@ public class MarshallUtil {
         return objectAndPtr;
     }
 
-    public static void set(Object object, String fieldName, Object fieldValue) {
+    private static void set(Object object, String fieldName, Object fieldValue) {
         // Sets a field of an object to a value and makes it accessible if it is not, using reflection
         Class<?> refClass = object.getClass();
         while (refClass != null) {
@@ -271,7 +271,7 @@ public class MarshallUtil {
         }
     }
 
-    public static byte[] marshall(int value) {
+    private static byte[] marshall(int value) {
         return new byte[]{
                 (byte) ((value >> 24) & 0xFF),
                 (byte) ((value >> 16) & 0xFF),
@@ -279,14 +279,14 @@ public class MarshallUtil {
                 (byte) (value & 0xFF)
         };
     }
-    public static int unmarshallInt(byte[] b, int start) {
+    private static int unmarshallInt(byte[] b, int start) {
         return (b[start] & 0xFF) << 24 |
                 (b[start + 1] & 0xFF) << 16 |
                 (b[start + 2] & 0xFF) << 8 |
                 (b[start + 3] & 0xFF);
     }
 
-    public static byte[] marshall(long value) {
+    private static byte[] marshall(long value) {
         byte[] bytes = new byte[]{
                 (byte) ((value >> 56) & 0xFF),
                 (byte) ((value >> 48) & 0xFF),
@@ -299,7 +299,7 @@ public class MarshallUtil {
         };
         return bytes;
     }
-    public static long unmarshallLong(byte[] b, int start) {
+    private static long unmarshallLong(byte[] b, int start) {
         return (b[start] & 0xFFL) << 56 |
                 (b[start + 1] & 0xFFL) << 48 |
                 (b[start + 2] & 0xFFL) << 40 |
@@ -310,23 +310,23 @@ public class MarshallUtil {
                 (b[start + 7] & 0xFFL);
     }
 
-    public static byte[] marshall(float value) {
+    private static byte[] marshall(float value) {
         return marshall(Float.floatToIntBits(value));    // floatToIntBits() is in accordance to IEEE 754
     }
 
-    public static float unmarshallFloat(byte[] b, int start) {
+    private static float unmarshallFloat(byte[] b, int start) {
         return Float.intBitsToFloat(unmarshallInt(b, start));   // intBitsToFloat() is in accordance to IEEE 754
     }
 
-    public static byte[] marshall(double value) {
+    private static byte[] marshall(double value) {
         return marshall(Double.doubleToLongBits(value));    // doubleToLongBits() is in accordance to IEEE 754
     }
 
-    public static double unmarshallDouble(byte[] b, int start) {
+    private static double unmarshallDouble(byte[] b, int start) {
         return Double.longBitsToDouble(unmarshallLong(b, start));   // longBitsToDouble() is in accordance to IEEE 754
     }
 
-    public static byte[] marshall(String s) {
+    private static byte[] marshall(String s) {
         byte[] res = new byte[s.length()];
         for (int i = 0; i < s.length(); i++) {
             res[i] = (byte) s.charAt(i);
@@ -334,7 +334,7 @@ public class MarshallUtil {
         return res;
     }
 
-    public static String unmarshallString(byte[] b, int start, int end) {
+    private static String unmarshallString(byte[] b, int start, int end) {
         char[] c = new char[end - start];
         for (int i = start; i < end; i++) {
             c[i - start] = (char) (b[i]);
@@ -342,7 +342,7 @@ public class MarshallUtil {
         return new String(c);
     }
 
-    public static Byte[] byteBoxing(byte[] b) {
+    private static Byte[] byteBoxing(byte[] b) {
         // Box the byte array into a Byte array to gain access to wrapper classes methods
         // In actual, this is used because of our implementation - where we store the byte array in a List<Byte>
         Byte[] res = new Byte[b.length];
@@ -351,7 +351,7 @@ public class MarshallUtil {
         return res;
     }
 
-    public static byte[] byteUnboxing(Byte[] b) {
+    private static byte[] byteUnboxing(Byte[] b) {
         // Unbox the Byte array into a byte array to gain access to primitive methods
         // In actual, this is used because of our implementation - where we store the byte array in a List<Byte>
         byte[] res = new byte[b.length];
@@ -360,48 +360,48 @@ public class MarshallUtil {
         return res;
     }
 
-    public static byte[] byteUnboxing(List list) {
+    private static byte[] byteUnboxing(List list) {
         // Unbox the Byte array into a byte array to gain access to primitive methods
         // Called right before marshaller finish marshalling to ensure data sent is in byte array form
         return MarshallUtil.byteUnboxing((Byte[]) list.toArray(new Byte[list.size()]));
     }
 
-    public static void appendMessage(List<Byte> list, int x) {
+    private static void appendMessage(List<Byte> list, int x) {
         // Append the size of the message
         list.addAll(Arrays.asList(MarshallUtil.byteBoxing(MarshallUtil.marshall(INT_SIZE))));
         // Append the message
         list.addAll(Arrays.asList(MarshallUtil.byteBoxing(MarshallUtil.marshall(x))));
     }
 
-    public static void appendMessage(List<Byte> list, long x) {
+    private static void appendMessage(List<Byte> list, long x) {
         // Append the size of the message
         list.addAll(Arrays.asList(MarshallUtil.byteBoxing(MarshallUtil.marshall(LONG_SIZE))));
         // Append the message
         list.addAll(Arrays.asList(MarshallUtil.byteBoxing(MarshallUtil.marshall(x))));
     }
 
-    public static void appendMessage(List<Byte> list, float f) {
+    private static void appendMessage(List<Byte> list, float f) {
         // Append the size of the message
         list.addAll(Arrays.asList(MarshallUtil.byteBoxing(MarshallUtil.marshall(FLOAT_SIZE))));
         // Append the message
         list.addAll(Arrays.asList(MarshallUtil.byteBoxing(MarshallUtil.marshall(f))));
     }
 
-    public static void appendMessage(List<Byte> list, double f) {
+    private static void appendMessage(List<Byte> list, double f) {
         // Append the size of the message
         list.addAll(Arrays.asList(MarshallUtil.byteBoxing(MarshallUtil.marshall(DOUBLE_SIZE))));
         // Append the message
         list.addAll(Arrays.asList(MarshallUtil.byteBoxing(MarshallUtil.marshall(f))));
     }
 
-    public static void appendMessage(List<Byte> list, String s) {
+    private static void appendMessage(List<Byte> list, String s) {
         // Append the size of the message
         list.addAll(Arrays.asList(MarshallUtil.byteBoxing(MarshallUtil.marshall(s.length()))));
         // Append the message
         list.addAll(Arrays.asList(MarshallUtil.byteBoxing(MarshallUtil.marshall(s))));
     }
 
-    public static void append(List<Byte> list, int x) {
+    private static void append(List<Byte> list, int x) {
         // Append the message without size
         list.addAll(Arrays.asList(MarshallUtil.byteBoxing(MarshallUtil.marshall(x))));
     }

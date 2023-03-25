@@ -48,7 +48,7 @@ public class StartServer {
         AppServer s;
         try {
             // 3. Open port and initialise socket
-            int PORT = 2222;
+            int PORT = AppServer.PORT;
             DatagramSocket socket = new DatagramSocket(PORT);
 
             // 4. Inject the chosen invocation semantic as a dependency into Server to facilitate Server's strategy design pattern

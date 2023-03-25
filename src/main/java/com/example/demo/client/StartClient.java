@@ -1,5 +1,6 @@
 package com.example.demo.client;
 
+import com.example.demo.server.AppServer;
 import com.example.demo.utils.InputValidator;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,7 +24,7 @@ public class StartClient {
             input = scanner.next();
         } while (!InputValidator.isValidIp(input));
 
-        int PORT = 2222;
+        int PORT = AppServer.PORT;
 
         // 2. Initiate socket connection
         try {
