@@ -36,15 +36,20 @@ public class AppClient {
             String choice;
             do {
                 System.out.println("\n===============================");
-                System.out.println("Service 1: Get Flights by Source & Destination");
-                System.out.println("Service 2: Get Flights by ID");
-                System.out.println("Service 3: Book seats on a flight");
-                System.out.println("Service 4: Monitor flight availability");
-                System.out.println("Service 5: Delete flight booking");
-                System.out.println("Service 6: Update flight booking");
-                System.out.print("Make your selection (1-6): ");
+                System.out.println("1: Get Flights by Source & Destination");
+                System.out.println("2: Get Flights by ID");
+                System.out.println("3: Book seats on a flight");
+                System.out.println("4: Monitor flight availability");
+                System.out.println("5: Delete flight booking");
+                System.out.println("6: Update flight booking");
+                System.out.println("7: Terminate client");
+                System.out.print("Make your selection (1-7): ");
                 choice = scanner.next();
             } while (!InputValidator.isInteger(choice, Optional.of(1), Optional.of(6)));
+
+            if (Integer.parseInt(choice) == 7) {
+                return;
+            }
 
             // 2. Construct and marshall request
             ClientRequest clientRequest = ClientServices.getService(++MESSAGE_ID, choice, scanner);
