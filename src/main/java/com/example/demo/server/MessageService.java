@@ -46,9 +46,9 @@ public class MessageService {
         }
     }
 
-    public void sendMessageToClient(ClientID clientId, byte[] unmarshalledMessage) {
+    public void sendMessageToClient(ClientID clientID, byte[] unmarshalledMessage) {
         try {
-            sendMessageToClient(InetAddress.getByName(clientId.getIP()), clientId.getPort(), unmarshalledMessage);
+            sendMessageToClient(InetAddress.getByName(clientID.getIP()), clientID.getPort(), unmarshalledMessage);
         } catch (UnknownHostException e) {
             log.error("UnknownHostException: " + e.getMessage());
         } 

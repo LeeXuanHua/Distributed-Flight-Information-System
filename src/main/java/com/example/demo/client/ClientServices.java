@@ -40,9 +40,9 @@ public class ClientServices {
     private static ClientRequest getFlightsById(int messageId, Scanner scanner) {
         System.out.println("You have selected Service 2: Get Flights by ID");
         System.out.print("Please input the ID of your desired flight: ");
-        String flightId = scanner.next();
+        String flightID = scanner.next();
 
-        String requestBody = KeyValueToString("flightId", flightId);
+        String requestBody = KeyValueToString("flightID", flightID);
         ClientRequest clientRequest = new ClientRequest(messageId, 2, requestBody);
         return clientRequest;
     }
@@ -50,12 +50,12 @@ public class ClientServices {
     private static ClientRequest addBooking(int messageId, Scanner scanner) {
         System.out.println("You have selected Service 3: Book seats on a flight");
         System.out.print("Please input the ID of your desired flight: ");
-        String flightId = scanner.next();
+        String flightID = scanner.next();
 
         System.out.print("Please input the number of seats you would like to book: ");
         String numSeats = scanner.next();
 
-        String requestBody = KeyValueToString("flightId", flightId) + KeyValueToString("numSeats", numSeats);
+        String requestBody = KeyValueToString("flightID", flightID) + KeyValueToString("numSeats", numSeats);
         ClientRequest clientRequest = new ClientRequest(messageId, 3, requestBody);
         return clientRequest;
     }
@@ -63,12 +63,12 @@ public class ClientServices {
     private static ClientRequest monitorFlight(int messageId, Scanner scanner) {
         System.out.println("You have selected Service 4: Monitor flight availability");
         System.out.print("Please input the ID of your desired flight: ");
-        String flightId = scanner.next();
+        String flightID = scanner.next();
 
         System.out.print("Please input the duration you would like to monitor for (in seconds): ");
-        String monitorDuration = scanner.next();
+        String monitorInterval = scanner.next();
 
-        String requestBody = KeyValueToString("flightId", flightId) + KeyValueToString("monitorDuration", monitorDuration);
+        String requestBody = KeyValueToString("flightID", flightID) + KeyValueToString("monitorInterval", monitorInterval);
         ClientRequest clientRequest = new ClientRequest(messageId, 4, requestBody);
         return clientRequest;
     }
@@ -76,9 +76,9 @@ public class ClientServices {
     private static ClientRequest deleteBooking(int messageId, Scanner scanner) {
         System.out.println("You have selected Service 5: Delete flight booking");
         System.out.print("Please input the ID of your desired flight: ");
-        String flightId = scanner.next();
+        String flightID = scanner.next();
 
-        String requestBody = KeyValueToString("flightId", flightId);
+        String requestBody = KeyValueToString("flightID", flightID);
         ClientRequest clientRequest = new ClientRequest(messageId, 5, requestBody);
         return clientRequest;
     }
@@ -86,12 +86,12 @@ public class ClientServices {
     private static ClientRequest updateBooking(int messageId, Scanner scanner) {
         System.out.println("You have selected Service 6: Update flight booking");
         System.out.print("Please input the ID of your desired flight: ");
-        String flightId = scanner.next();
+        String flightID = scanner.next();
 
         System.out.print("Please input the number of seats you would like to increase your booking by: ");
         String numSeats = scanner.next();
 
-        String requestBody = KeyValueToString("flightId", flightId) + KeyValueToString("numSeats", numSeats);
+        String requestBody = KeyValueToString("flightID", flightID) + KeyValueToString("numSeats", numSeats);
         ClientRequest clientRequest = new ClientRequest(messageId, 6, requestBody);
         return clientRequest;
     }
