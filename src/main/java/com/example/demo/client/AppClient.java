@@ -56,9 +56,13 @@ public class AppClient {
             
             // Handle flight monitoring
             if (Integer.parseInt(choice) == 4) {
-                Monitoring monitor = (Monitoring) responseObject;
-                LocalDateTime expiry = monitor.getExpiry();
-                handleCallback(expiry);
+                Optional<Monitoring> monitor = (Optional<Monitoring>) responseObject;
+                if (monitor.isPresent()) {
+                    LocalDateTime expiry = monitor.get().getExpiry();
+                    handleCallback(expiry);
+                } else {
+                    System.out.println("Unable to monitor flight because it does not exist");
+                }                
             }
 
         // anything requiring a socket function will need to have this catch block

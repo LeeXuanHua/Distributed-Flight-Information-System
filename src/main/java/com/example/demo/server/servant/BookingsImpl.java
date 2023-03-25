@@ -38,31 +38,31 @@ public class BookingsImpl implements BookingsInterface {
 
     //Service 3
     @Override
-    public int AddFlightBooking(String clientIp, int clientPort, int flightId, int numSeats) {
+    public Optional<Bookings> AddFlightBooking(String clientIp, int clientPort, int flightId, int numSeats) {
         Optional<Information> existingFlight = this.informationService.GetFlightById(flightId);
         if (!existingFlight.isPresent()) {
-            return 0;
+            return Optional.empty();
         }
 
         Optional<Bookings> existingBooking = GetFlightBooking(clientIp, clientPort, flightId);
         if (existingBooking.isPresent()) {
-            return 0;
+            return Optional.empty();
         }
 
         int availableSeats = existingFlight.get().getSeatAvailability();
-        int actualBookedSeats = numSeats <= availableSeats ? numSeats : numSeats - availableSeats;
+        int actualBookedSeats = numSeats <= availableSeats ? numSeats : availableSeats ;
         bookingsRepository.insertFlightBookings(clientIp, clientPort, flightId, actualBookedSeats);
-        this.informationRepository.updateFlightsSeatAvailability(flightId, availableSeats - actualBookedSeats);
-        this.monitoringService.SendUpdateToMonitorList(flightId);
-        return actualBookedSeats;
+        informationRepository.updateFlightsSeatAvailability(flightId, availableSeats - actualBookedSeats);
+        monitoringService.SendUpdateToMonitorList(flightId);
+        return bookingsRepository.findFlightBookingsByClientIDAndFlightID(clientIp, clientPort, flightId);
     }
 
     //Service 5
     @Override
-    public int DeleteFlightBooking(String clientIp, int clientPort, int flightId) {
+    public Optional<Bookings> DeleteFlightBooking(String clientIp, int clientPort, int flightId) {
         Optional<Bookings> existingBooking = GetFlightBooking(clientIp, clientPort, flightId);
         if (!existingBooking.isPresent()) {
-            return 0;
+            return Optional.empty();
         }
 
         int releasedSeats = existingBooking.get().getNumSeats();
@@ -71,15 +71,15 @@ public class BookingsImpl implements BookingsInterface {
         Optional<Information> flight = informationRepository.findFlightsByFlightID(flightId);
         informationRepository.updateFlightsSeatAvailability(flightId, flight.get().getSeatAvailability() + releasedSeats);
         this.monitoringService.SendUpdateToMonitorList(flightId);
-        return releasedSeats;
+        return existingBooking;
     }
 
     //Service 6
     @Override
-    public int UpdateFlightBooking(String clientIp, int clientPort, int flightId, int numSeats) {
+    public Optional<Bookings> UpdateFlightBooking(String clientIp, int clientPort, int flightId, int numSeats) {
         Optional<Bookings> existingBooking = GetFlightBooking(clientIp, clientPort, flightId);
         if (!existingBooking.isPresent()) {
-            return 0;
+            return Optional.empty();
         }
 
         Optional<Information> existingFlight = this.informationService.GetFlightById(flightId);
@@ -89,7 +89,7 @@ public class BookingsImpl implements BookingsInterface {
         bookingsRepository.incrementFlightBookings(clientIp, clientPort, flightId, actualBookedSeats);
         informationRepository.updateFlightsSeatAvailability(flightId, availableSeats - actualBookedSeats);
         this.monitoringService.SendUpdateToMonitorList(flightId);
-        return actualBookedSeats;
+        return bookingsRepository.findFlightBookingsByClientIDAndFlightID(clientIp, clientPort, flightId);
     }
 
 }

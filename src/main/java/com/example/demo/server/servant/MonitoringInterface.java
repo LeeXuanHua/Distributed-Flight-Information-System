@@ -1,8 +1,9 @@
 package com.example.demo.server.servant;
 
-import java.time.LocalDateTime;
+import java.util.Optional;
+import com.example.demo.server.servant.models.*;
 
 public interface MonitoringInterface {
     //Service 4
-    void AddToMonitorList(String clientIp, int clientPort, int flightId, int monitorDuration);
+    Optional<Monitoring> AddToMonitorList(String clientIp, int clientPort, int flightId, int monitorDuration);
 }

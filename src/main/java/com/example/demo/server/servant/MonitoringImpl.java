@@ -28,27 +28,28 @@ public class MonitoringImpl implements MonitoringInterface {
 
     //Service 4
     @Override
-    public void AddToMonitorList(String clientIp, int clientPort, int flightId, int monitorDuration) {
+    public Optional<Monitoring> AddToMonitorList(String clientIp, int clientPort, int flightId, int monitorDuration) {
         LocalDateTime expiry = LocalDateTime.now().plusSeconds(monitorDuration);
         Optional<Information> existingFlight = this.informationRepository.findFlightsByFlightID(flightId);
         if (!existingFlight.isPresent()) {
-            return;
+            return Optional.empty();
         }
 
         Optional<Monitoring> existingMonitor = monitoringRepository.findFlightMonitoringByClientIDAndFlightID(clientIp, clientPort, flightId);
         if (existingMonitor.isPresent()) {
             monitoringRepository.updateFlightMonitoringByClientIDAndFlightID(clientIp, clientPort, flightId, expiry);
-            return;
+            return monitoringRepository.findFlightMonitoringByClientIDAndFlightID(clientIp, clientPort, flightId);
         }
 
         monitoringRepository.insertFlightMonitoringByClientIDAndFlightID(clientIp, clientPort, flightId, expiry);
+        return monitoringRepository.findFlightMonitoringByClientIDAndFlightID(clientIp, clientPort, flightId);
     }
 
-    public List<Monitoring> GetMonitorList() {
+    public List<Monitoring> GetAllMonitorList() {
         return monitoringRepository.findAllFlightMonitoring();
     }
 
-    void SendUpdateToMonitorList(int flightId) {
+    public void SendUpdateToMonitorList(int flightId) {
         List<Monitoring> expiredMonitors = new ArrayList<>();
         List<Monitoring> monitors = monitoringRepository.findFlightMonitoringByFlightId(flightId);
         Information updatedFlight = informationRepository.findFlightsByFlightID(flightId).get();

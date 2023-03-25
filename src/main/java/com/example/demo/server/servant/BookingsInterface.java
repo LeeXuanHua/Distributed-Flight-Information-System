@@ -1,12 +1,16 @@
 package com.example.demo.server.servant;
 
+import java.util.Optional;
+
+import com.example.demo.server.servant.models.Bookings;
+
 public interface BookingsInterface {
     //Service 3
-    int AddFlightBooking(String clientIp, int clientPort, int flightId, int numSeats);
+    Optional<Bookings> AddFlightBooking(String clientIp, int clientPort, int flightId, int numSeats);
 
     //Service 5
-    int DeleteFlightBooking(String clientIp, int clientPort, int flightId);
+    Optional<Bookings> DeleteFlightBooking(String clientIp, int clientPort, int flightId);
 
     //Service 6
-    int UpdateFlightBooking(String clientIp, int clientPort, int flightId, int numSeats);
+    Optional<Bookings> UpdateFlightBooking(String clientIp, int clientPort, int flightId, int numSeats);
 }
