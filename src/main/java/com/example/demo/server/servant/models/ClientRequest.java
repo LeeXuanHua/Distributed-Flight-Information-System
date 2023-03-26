@@ -5,6 +5,8 @@ public class ClientRequest {
     private int serviceId;
     private String requestBody;
 
+    public ClientRequest() {}
+
     public ClientRequest(int messageId, int serviceId, String requestBody) {
         this.messageId = messageId;
         this.serviceId = serviceId;
@@ -37,6 +39,10 @@ public class ClientRequest {
 
     @Override
     public String toString() {
-        return "ID is " + this.getMessageId() + " and service called is " + this.getServiceId() + " and message is " + this.getRequestBody();
+        return "{" +
+                " messageId='" + getMessageId() + "'" +
+                ", serviceId='" + getServiceId() + "'" +
+                ", requestBody='" + getRequestBody() + "'" +
+                "}";
     }
 }

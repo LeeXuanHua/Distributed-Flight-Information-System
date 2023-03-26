@@ -130,7 +130,7 @@ public class MarshallUtil {
         // Extract the object type name (string) from the byte array
         int classNameLength = unmarshallInt(b, ptr);
         ptr += INT_SIZE;
-        String className = unmarshallString(String.valueOf(b), ptr, ptr+classNameLength);
+        String className = unmarshallString(b, ptr, ptr+classNameLength);
         ptr += classNameLength;
 
         // Create an instance of the object based on the class name
@@ -208,7 +208,7 @@ public class MarshallUtil {
 
             switch (type) {
                 case "java.lang.String", "String" -> {
-                    String stringValue = unmarshallString(String.valueOf(b), ptr, ptr + sourceLength);
+                    String stringValue = unmarshallString(b, ptr, ptr + sourceLength);
                     ptr += sourceLength;
                     set(obj, field.getName(), stringValue);
                 }
@@ -336,10 +336,10 @@ public class MarshallUtil {
         return res;
     }
 
-    public static String unmarshallString(String b, int start, int end) {
+    private static String unmarshallString(byte[] b, int start, int end) {
         char[] c = new char[end - start];
         for (int i = start; i < end; i++) {
-            c[i - start] = (b.charAt(i));
+            c[i - start] = (char) (b[i]);
         }
         return new String(c);
     }

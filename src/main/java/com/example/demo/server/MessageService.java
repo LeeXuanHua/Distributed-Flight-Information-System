@@ -37,7 +37,7 @@ public class MessageService {
             DatagramPacket messagePacket = new DatagramPacket(marshalledMessage, marshalledMessage.length, clientAddress, clientPort);
             if (!(Simulate.isFailure(ReqOrReplyEnum.REPLY))) {
                 socket.send(messagePacket);
-                log.info("Sending reply. The message before marshalling is: " + new String((byte[]) unmarshalledMessage, StandardCharsets.UTF_8));
+                log.info("Sending reply. The message before marshalling is: " + unmarshalledMessage);
             }
 
         // anything requiring a socket function will need to have this catch block

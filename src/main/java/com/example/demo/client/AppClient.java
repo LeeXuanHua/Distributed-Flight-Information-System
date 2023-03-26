@@ -55,6 +55,7 @@ public class AppClient {
             ClientRequest clientRequest = ClientServices.getService(++MESSAGE_ID, choice, scanner);
             log.info("client request " + clientRequest.toString());
             byte[] marshalledRequest = MarshallUtil.marshall(clientRequest);
+            System.out.println("Marshalled request: " + marshalledRequest);
             DatagramPacket requestPacket = new DatagramPacket(marshalledRequest, marshalledRequest.length);
 
             Object responseObject = handleRequest(requestPacket);
@@ -100,7 +101,7 @@ public class AppClient {
         while (!receivedReply) {
             try {
                 socket.receive(replyPacket);
-                log.info("Reply received: " + new String(replyPacket.getData(), StandardCharsets.UTF_8).trim());
+                log.info("Reply received: " + replyPacket.getData());
                 receivedReply = true;
             } catch (SocketTimeoutException e) {
                 sendRequest(socket, requestPacket);

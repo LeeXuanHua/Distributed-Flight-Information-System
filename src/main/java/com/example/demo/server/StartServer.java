@@ -217,7 +217,11 @@ public class StartServer {
             // Service 3
             System.out.println("Service 3 - Add Flight Booking");
             System.out.println(String.format("Trying to add %s to flight %d with seat %d", clientID_FS, flightID, clientSeat_FS));
-            System.out.println(bookingsService.AddFlightBooking(clientID_FS, flightID, clientSeat_FS));
+            try {
+                System.out.println(bookingsService.AddFlightBooking(clientID_FS, flightID, clientSeat_FS));
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
             System.out.println(informationService.GetFlightById(flightID));
             System.out.println(bookingsService.GetFlightBooking(clientID_FS, flightID));
 
