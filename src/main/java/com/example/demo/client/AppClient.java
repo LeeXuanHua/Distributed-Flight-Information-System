@@ -1,6 +1,5 @@
 package com.example.demo.client;
 
-import com.example.demo.server.servant.models.ClientRequest;
 import com.example.demo.server.servant.models.Monitoring;
 import com.example.demo.utils.InputValidator;
 import com.example.demo.utils.MarshallUtil;
@@ -13,7 +12,6 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Scanner;

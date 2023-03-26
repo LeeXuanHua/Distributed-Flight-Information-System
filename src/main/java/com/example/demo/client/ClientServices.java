@@ -2,7 +2,6 @@ package com.example.demo.client;
 
 import java.util.Scanner;
 
-import com.example.demo.server.servant.models.ClientRequest;
 import com.example.demo.utils.MarshallUtil;
 
 public class ClientServices {

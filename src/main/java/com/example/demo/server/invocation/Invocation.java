@@ -1,5 +1,7 @@
-package com.example.demo.server;
+package com.example.demo.server.invocation;
 
+import com.example.demo.client.ClientRequest;
+import com.example.demo.server.ServerReply;
 import com.example.demo.server.servant.BookingsImpl;
 import com.example.demo.server.servant.InformationImpl;
 import com.example.demo.server.servant.MonitoringImpl;
@@ -10,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -31,48 +32,63 @@ public abstract class Invocation {
         switch (serviceId) {
             case 1: {
                 List<Information> res = information.GetFlightsBySourceAndDestination(requestBodyParsed.get("src"), requestBodyParsed.get("dst"));
-                System.out.println("res " + res);
-                return res;
+                if (res.isEmpty()) {
+                    ServerReply reply = new ServerReply(false, "ERROR message: no flight matches the source and destination places of " + requestBodyParsed.get("src") + " and " + requestBodyParsed.get("dst"), Optional.empty());
+                    return reply;
+                }
+                ServerReply reply = new ServerReply(true, "Flights found: ", Optional.of(res));
+                return reply;
             }
             case 2: {
                 Optional<Information> res = information.GetFlightById(Integer.parseInt(requestBodyParsed.get("flightID")));
                 if (res.isEmpty()) {
-                    return "ERROR message: the flight with the requested identifier does not exist";
+                    ServerReply reply = new ServerReply(false, "ERROR message: the flight with the requested identifier " + Integer.parseInt(requestBodyParsed.get("flightID")) + " does not exist", Optional.empty());
+                    return reply;
                 }
-                return res.get();
+                ServerReply reply = new ServerReply(true, "Details for flight " + Integer.parseInt(requestBodyParsed.get("flightID")) + " is: ", Optional.of(res));
+                return reply;
             }
             case 3: {
                 Optional<Information> checkIfPresent = information.GetFlightById(Integer.parseInt(requestBodyParsed.get("flightID")));
                 if (checkIfPresent.isEmpty()) {
-                    return "ERROR message: the flight with the requested identifier does not exist";
+                    ServerReply reply = new ServerReply(false, "ERROR message: the flight with the requested identifier " + Integer.parseInt(requestBodyParsed.get("flightID")) + " does not exist", Optional.empty());
+                    return reply;
                 }
                 try {
                     Optional<Bookings> res = bookings.AddFlightBooking(clientID, Integer.parseInt(requestBodyParsed.get("flightID")), Integer.parseInt(requestBodyParsed.get("numSeats")));
-                    return res.get();
+                    ServerReply reply = new ServerReply(true, "Reservation made. Here are the details: ", Optional.ofNullable(res));
+                    return reply;
                 } catch (InsufficientSeatsException e) {
-                    return "ERROR message: insufficient number of available seats";
+                    ServerReply reply = new ServerReply(false, "ERROR message: insufficient number of available seats for flight " + Integer.parseInt(requestBodyParsed.get("flightID")), Optional.empty());
+                    return reply;
                 }
             }
             case 4: {
                 Optional<Monitoring> res = monitoring.AddToMonitorList(clientID, Integer.parseInt(requestBodyParsed.get("flightID")), Integer.parseInt(requestBodyParsed.get("monitorInterval")));
                 if (res.isEmpty()) {
-                    return "ERROR message: the flight with the requested identifier does not exist";
+                    ServerReply reply = new ServerReply(false, "ERROR message: the flight with the requested identifier " + Integer.parseInt(requestBodyParsed.get("flightID")) + " does not exist", Optional.empty());
+                    return reply;
                 }
-                return res.get();
+                ServerReply reply = new ServerReply(true, "You will now monitor flight + " + Integer.parseInt(requestBodyParsed.get("flightID")) + " for the next " + Integer.parseInt(requestBodyParsed.get("monitorInterval")) + " seconds. The flight details are: ", Optional.of(res));
+                return reply;
             }
             case 5: {
                 Optional<Bookings> res = bookings.DeleteFlightBooking(clientID, Integer.parseInt(requestBodyParsed.get("flightID")));
                 if (res.isEmpty()) {
-                    return "ERROR message: booking with the requested identifier under your name does not exist";
+                    ServerReply reply = new ServerReply(false, "ERROR message: the flight with the requested identifier " + Integer.parseInt(requestBodyParsed.get("flightID")) + " under your name does not exist", Optional.empty());
+                    return reply;
                 }
-                return res.get();
+                ServerReply reply = new ServerReply(true, "You have deleted your flight booking for " + Integer.parseInt(requestBodyParsed.get("flightID")) + ". Your booking was: ", Optional.of(res));
+                return reply;
             }
             case 6: {
                 Optional<Bookings> res = bookings.UpdateFlightBooking(clientID, Integer.parseInt(requestBodyParsed.get("flightID")), Integer.parseInt(requestBodyParsed.get("numSeats")));
                 if (res.isEmpty()) {
-                    return "ERROR message: booking with the requested identifier under your name does not exist";
+                    ServerReply reply = new ServerReply(false, "ERROR message: the flight with the requested identifier " + Integer.parseInt(requestBodyParsed.get("flightID")) + " under your name does not exist", Optional.empty());
+                    return reply;
                 }
-                return res.get();
+                ServerReply reply = new ServerReply(true, "You have increased your flight booking for " + Integer.parseInt(requestBodyParsed.get("flightID")) + " by " + Integer.parseInt(requestBodyParsed.get("numSeats")) + " seats. Your updated booking is: ", Optional.of(res));
+                return reply;
             }
 
         }

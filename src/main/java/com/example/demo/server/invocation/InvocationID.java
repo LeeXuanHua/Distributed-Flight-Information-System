@@ -1,4 +1,4 @@
-package com.example.demo.server;
+package com.example.demo.server.invocation;
 
 import com.example.demo.server.servant.models.ClientID;
 import lombok.AllArgsConstructor;

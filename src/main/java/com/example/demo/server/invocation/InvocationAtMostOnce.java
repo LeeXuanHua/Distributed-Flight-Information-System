@@ -1,10 +1,10 @@
-package com.example.demo.server;
+package com.example.demo.server.invocation;
 
 import com.example.demo.server.servant.BookingsImpl;
 import com.example.demo.server.servant.InformationImpl;
 import com.example.demo.server.servant.MonitoringImpl;
 import com.example.demo.server.servant.models.ClientID;
-import com.example.demo.server.servant.models.ClientRequest;
+import com.example.demo.client.ClientRequest;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
@@ -24,7 +24,7 @@ public class InvocationAtMostOnce extends Invocation {
         Object res;
         if (InvocationHistory.containsKey(invocationID)) {
             res = InvocationHistory.get(invocationID);
-            log.warn("!!! Duplicate request detected. Returning cached reply");
+            log.warn("!!! WARNING: Duplicate request detected. Returning cached reply.");
         } else {
             res = callServant(clientID, clientRequest.getServiceId(), clientRequest.getRequestBody());
             InvocationHistory.put(invocationID, res);

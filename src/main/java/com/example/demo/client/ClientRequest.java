@@ -1,4 +1,4 @@
-package com.example.demo.server.servant.models;
+package com.example.demo.client;
 
 public class ClientRequest {
     private int messageId;

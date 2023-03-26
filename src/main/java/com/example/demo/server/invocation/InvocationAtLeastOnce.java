@@ -1,10 +1,10 @@
-package com.example.demo.server;
+package com.example.demo.server.invocation;
 
 import com.example.demo.server.servant.BookingsImpl;
 import com.example.demo.server.servant.InformationImpl;
 import com.example.demo.server.servant.MonitoringImpl;
 import com.example.demo.server.servant.models.ClientID;
-import com.example.demo.server.servant.models.ClientRequest;
+import com.example.demo.client.ClientRequest;
 
 public class InvocationAtLeastOnce extends Invocation {
     public InvocationAtLeastOnce(BookingsImpl bookings, MonitoringImpl monitoring, InformationImpl information) {
