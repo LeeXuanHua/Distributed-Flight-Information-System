@@ -28,7 +28,6 @@ public abstract class Invocation {
 
     protected Object callServant(ClientID clientID, int serviceId, String requestBody) {
         HashMap<String, String> requestBodyParsed = Deserialise(requestBody);
-        log.debug("2. parsed clientReq " + requestBodyParsed);
         switch (serviceId) {
             case 1: {
                 List<Information> res = information.GetFlightsBySourceAndDestination(requestBodyParsed.get("src"), requestBodyParsed.get("dst"));

@@ -53,12 +53,13 @@ public class AppClient {
 
             // 2. Construct and marshall request
             ClientRequest clientRequest = ClientServices.getService(++MESSAGE_ID, choice, scanner);
-            log.info("client request " + clientRequest.toString());
+            log.info("Client request: " + clientRequest.toString());
             byte[] marshalledRequest = MarshallUtil.marshall(clientRequest);
-            System.out.println("Marshalled request: " + marshalledRequest);
+            log.info("Marshalled request: " + marshalledRequest);
             DatagramPacket requestPacket = new DatagramPacket(marshalledRequest, marshalledRequest.length);
 
             Object responseObject = handleRequest(requestPacket);
+            log.info("Unmarshalled reply is: " + responseObject);
             
             // Handle flight monitoring
             if (Integer.parseInt(choice) == 4) {
@@ -104,6 +105,7 @@ public class AppClient {
                 log.info("Reply received: " + replyPacket.getData());
                 receivedReply = true;
             } catch (SocketTimeoutException e) {
+                log.info("No reply received. Resending request...");
                 sendRequest(socket, requestPacket);
             }
         }
@@ -115,7 +117,6 @@ public class AppClient {
 
     private Object handleRequest(DatagramPacket requestPacket) throws SocketException, IOException {
         socket.setSoTimeout(5000);
-        log.info("Resending request");
         sendRequest(socket, requestPacket);
         return receiveReply(requestPacket);
     }
