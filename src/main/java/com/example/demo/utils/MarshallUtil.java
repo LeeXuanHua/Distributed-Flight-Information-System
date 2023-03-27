@@ -3,9 +3,11 @@ package com.example.demo.utils;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.*;
+import lombok.extern.slf4j.Slf4j;
 
 import com.example.demo.server.servant.models.Time;
 
+@Slf4j
 public class MarshallUtil {
     public static final char KV_PAIR = ':';
     public static final char DELIMITER = '|';
@@ -108,8 +110,20 @@ public class MarshallUtil {
     }
 
     private static void marshallParsing(List<Byte> message, Object obj) {
-        // Append the class name to the message
-        appendMessage(message, obj.getClass().getTypeName());
+        String className = obj.getClass().getTypeName();
+
+        // If the class is Optional (e.g. nested Optionals)
+        if (className.equals(Optional.class.getTypeName())) {
+            marshall((Optional) obj, message);
+            return;
+            // If the class is ArrayList (e.g. nested ArrayLists)
+        } else if (className.equals(ArrayList.class.getTypeName())) {
+            marshall((List<Object>) obj, message);
+            return;
+        } else {
+            // Append the class name to the message
+            appendMessage(message, className);
+        }
 
         // Extract all fields (type and name) from the object and marshall them based on their types
         Field[] fields = obj.getClass().getDeclaredFields();
