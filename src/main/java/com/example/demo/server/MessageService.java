@@ -31,13 +31,14 @@ public class MessageService {
 
     public void sendMessageToClient(InetAddress clientAddress, int clientPort, Object unmarshalledMessage) {
         try {
-            byte[] marshalledMessage = MarshallUtil.marshall(unmarshalledMessage);
+            log.info("The reply message before marshalling is: " + unmarshalledMessage);
 
+            byte[] marshalledMessage = MarshallUtil.marshall(unmarshalledMessage);
             // Send message, accounting for the chance of simulated failure
             DatagramPacket messagePacket = new DatagramPacket(marshalledMessage, marshalledMessage.length, clientAddress, clientPort);
             if (!(Simulate.isFailure(ReqOrReplyEnum.REPLY))) {
                 socket.send(messagePacket);
-                log.info("Sending reply. The message before marshalling is: " + unmarshalledMessage);
+                log.info("Sending reply");
             }
 
         // anything requiring a socket function will need to have this catch block

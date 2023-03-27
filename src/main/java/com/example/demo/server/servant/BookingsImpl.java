@@ -91,10 +91,13 @@ public class BookingsImpl implements BookingsInterface {
 
         Optional<Information> existingFlight = this.informationService.GetFlightById(flightID);
         int availableSeats = existingFlight.get().getSeatAvailability();
-        int actualBookedSeats = numSeats <= availableSeats ? numSeats : availableSeats;
 
-        bookingsRepository.incrementFlightBookings(clientID.getIP(), clientID.getPort(), flightID, actualBookedSeats);
-        informationRepository.updateFlightsSeatAvailability(flightID, availableSeats - actualBookedSeats);
+        if (numSeats > availableSeats) {
+            throw new InsufficientSeatsException();
+        }
+
+        bookingsRepository.incrementFlightBookings(clientID.getIP(), clientID.getPort(), flightID, numSeats);
+        informationRepository.updateFlightsSeatAvailability(flightID, availableSeats - numSeats);
         this.monitoringService.SendUpdateToMonitorList(flightID);
         return GetFlightBooking(clientID, flightID);
     }

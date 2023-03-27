@@ -82,13 +82,18 @@ public abstract class Invocation {
                 return reply;
             }
             case 6: {
-                Optional<Bookings> res = bookings.UpdateFlightBooking(clientID, Integer.parseInt(requestBodyParsed.get("flightID")), Integer.parseInt(requestBodyParsed.get("numSeats")));
-                if (res.isEmpty()) {
-                    ServerReply reply = new ServerReply(false, "ERROR message: the flight with the requested identifier " + Integer.parseInt(requestBodyParsed.get("flightID")) + " under your name does not exist", Optional.empty());
+                try {
+                    Optional<Bookings> res = bookings.UpdateFlightBooking(clientID, Integer.parseInt(requestBodyParsed.get("flightID")), Integer.parseInt(requestBodyParsed.get("numSeats")));
+                    if (res.isEmpty()) {
+                        ServerReply reply = new ServerReply(false, "ERROR message: the flight with the requested identifier " + Integer.parseInt(requestBodyParsed.get("flightID")) + " under your name does not exist", Optional.empty());
+                        return reply;
+                    }
+                    ServerReply reply = new ServerReply(true, "You have increased your flight booking for " + Integer.parseInt(requestBodyParsed.get("flightID")) + " by " + Integer.parseInt(requestBodyParsed.get("numSeats")) + " seats. Your updated booking is: ", Optional.of(res));
+                    return reply;
+                } catch (InsufficientSeatsException e) {
+                    ServerReply reply = new ServerReply(false, "ERROR message: insufficient number of available seats for flight " + Integer.parseInt(requestBodyParsed.get("flightID")), Optional.empty());
                     return reply;
                 }
-                ServerReply reply = new ServerReply(true, "You have increased your flight booking for " + Integer.parseInt(requestBodyParsed.get("flightID")) + " by " + Integer.parseInt(requestBodyParsed.get("numSeats")) + " seats. Your updated booking is: ", Optional.of(res));
-                return reply;
             }
 
         }
