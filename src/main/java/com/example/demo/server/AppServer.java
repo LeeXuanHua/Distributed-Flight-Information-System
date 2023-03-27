@@ -44,7 +44,7 @@ public class AppServer {
             int clientPort = requestPacket.getPort();
             log.info("Server received data: " + requestPacket.getData());
             ClientRequest clientRequest = (ClientRequest) MarshallUtil.unmarshall(requestPacket.getData());
-            log.info("Sever unmarshalling data as: " + clientRequest);
+            log.info("Server unmarshalling data as: " + clientRequest);
 
             // 3. With the client IP and port, ClientRequest, and requestString,
             //    let the invocInterface handle the request based on the required invocation semantic
