@@ -15,6 +15,8 @@ public class Time implements DataEntity {
     private int sec;
     private int ms;
 
+    public Time() {}
+
     public Time(int year, int month, int date, int hours, int min, int sec, int ms) {
         this.year = year;
         this.month = month;
