@@ -9,6 +9,7 @@ import com.example.demo.server.servant.models.Time;
 public class MarshallUtil {
     public static final char KV_PAIR = ':';
     public static final char DELIMITER = '|';
+    public static final int BOOL_SIZE = 1;
     public static final int INT_SIZE = 4;
     public static final int LONG_SIZE = 8;
     public static final int FLOAT_SIZE = 4;
@@ -63,6 +64,24 @@ public class MarshallUtil {
         return MarshallUtil.byteUnboxing(message);
     }
 
+    private static void marshall(Optional obj, List<Byte> message) {
+        // Check if the object is present
+        // If present - append the Optional class name and 0 to the message, and process it as per normal
+        // If not present - append the Optional class name and 0 to the message, and terminate
+        if (obj.isPresent()) {
+            // Append the classname and number of objects to the message
+            appendMessage(message, obj.getClass().getTypeName());
+            appendMessage(message, 1);
+
+            // Parsing the object and appending the message
+            marshallParsing(message, obj.get());
+        } else {
+            // Append the classname and number of objects to the message
+            appendMessage(message, obj.getClass().getTypeName());
+            appendMessage(message, 0);
+        }
+    }
+
     public static byte[] marshall(List<Object> objList) {
         List<Byte> message = new ArrayList<Byte>();
 
@@ -76,6 +95,16 @@ public class MarshallUtil {
 
         // Convert the list of Bytes to 1 array of Bytes
         return MarshallUtil.byteUnboxing(message);
+    }
+
+    private static void marshall(List<Object> objList, List<Byte> message) {
+        // Append the classname and number of objects to the message
+        appendMessage(message, objList.getClass().getTypeName());
+        appendMessage(message, objList.size());
+
+        // Parsing the object and appending the message
+        for (Object obj : objList)
+            marshallParsing(message, obj);
     }
 
     private static void marshallParsing(List<Byte> message, Object obj) {
@@ -93,6 +122,7 @@ public class MarshallUtil {
                 // Based on the field type, call the appropriate method
                 // Size is appended to message and its field value is marshalled
                 switch (type) {
+                    case "java.lang.Boolean", "boolean" -> appendMessage(message, (boolean) o);
                     case "java.lang.String", "String" -> appendMessage(message, (String) o);
                     case "java.lang.Integer", "int" -> appendMessage(message, (int) o);
                     case "java.lang.Long", "long" -> appendMessage(message, (long) o);
@@ -103,7 +133,21 @@ public class MarshallUtil {
                         Time t = Time.fromDateTime((LocalDateTime) o);
                         marshallParsing(message, t);
                     }
-                    default -> marshallParsing(message, o);
+                    default -> {
+                        // Check if the object is Optional
+                        if (o.getClass().getTypeName() == "java.util.Optional" || o.getClass().getTypeName() == "Optional") {
+                            marshall((Optional) o, message);
+
+                        // Check if the object is Optional
+                        } else if (o.getClass().getTypeName() == "java.util.ArrayList" || o.getClass().getTypeName() == "ArrayList") {
+                            marshall((List<Object>) o, message);
+
+                        // If not, assume it is a nested class
+                        } else {
+                            marshallParsing(message, o);
+                        }
+                        marshallParsing(message, o);
+                    }
                 }
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
@@ -207,6 +251,11 @@ public class MarshallUtil {
             ptr += INT_SIZE;
 
             switch (type) {
+                case "java.lang.Boolean", "boolean" -> {
+                    boolean booleanValue = unmarshallBoolean(b, ptr);
+                    ptr += sourceLength;
+                    set(obj, field.getName(), booleanValue);
+                }
                 case "java.lang.String", "String" -> {
                     String stringValue = unmarshallString(b, ptr, ptr + sourceLength);
                     ptr += sourceLength;
@@ -271,6 +320,14 @@ public class MarshallUtil {
                 throw new IllegalStateException(e);
             }
         }
+    }
+
+    private static byte[] marshall(boolean value) {
+        return new byte[]{(byte) (value ? 1 : 0)};
+    }
+
+    private static boolean unmarshallBoolean(byte[] b, int start) {
+        return b[start] == 1;
     }
 
     private static byte[] marshall(int value) {
@@ -366,6 +423,13 @@ public class MarshallUtil {
         // Unbox the Byte array into a byte array to gain access to primitive methods
         // Called right before marshaller finish marshalling to ensure data sent is in byte array form
         return MarshallUtil.byteUnboxing((Byte[]) list.toArray(new Byte[list.size()]));
+    }
+
+    private static void appendMessage(List<Byte> list, boolean x) {
+        // Append the size of the message
+        list.addAll(Arrays.asList(MarshallUtil.byteBoxing(MarshallUtil.marshall(BOOL_SIZE))));
+        // Append the message
+        list.addAll(Arrays.asList(MarshallUtil.byteBoxing(MarshallUtil.marshall(x))));
     }
 
     private static void appendMessage(List<Byte> list, int x) {
