@@ -80,11 +80,15 @@ public class AppClient {
 
     private void handleCallback(LocalDateTime expiryTime) throws IOException {
         while (LocalDateTime.now().isBefore(expiryTime)) {
+            socket.setSoTimeout(0);
             byte[] replyBuffer = new byte[1024];
             DatagramPacket replyPacket = new DatagramPacket(replyBuffer, replyBuffer.length);
             socket.receive(replyPacket);
 
-            if (LocalDateTime.now().isAfter(expiryTime)) break;
+            if (LocalDateTime.now().isAfter(expiryTime)) {
+                socket.setSoTimeout(5000);
+                break;
+            }
 
             byte[] marshalledReply = replyPacket.getData();
             Object updatedFlight = MarshallUtil.unmarshall(marshalledReply);
