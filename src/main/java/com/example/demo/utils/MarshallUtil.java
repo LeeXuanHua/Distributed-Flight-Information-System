@@ -160,7 +160,6 @@ public class MarshallUtil {
                         } else {
                             marshallParsing(message, o);
                         }
-                        marshallParsing(message, o);
                     }
                 }
             } catch (IllegalAccessException e) {
