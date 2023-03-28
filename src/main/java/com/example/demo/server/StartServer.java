@@ -233,7 +233,11 @@ public class StartServer {
             // Service 6
             System.out.println("Service 6 - Update Flight Booking");
             System.out.println(String.format("Trying to update %s in flight %d by increasing num of seats by %d", clientID_FS, flightID, clientSeat_FS));
-            System.out.println(bookingsService.UpdateFlightBooking(clientID_FS, flightID, clientSeat_FS));
+            try {
+                System.out.println(bookingsService.UpdateFlightBooking(clientID_FS, flightID, clientSeat_FS));
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
             System.out.println(informationService.GetFlightById(flightID));
             System.out.println(bookingsService.GetFlightBooking(clientID_FS, flightID));
 
