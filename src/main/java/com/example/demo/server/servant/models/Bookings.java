@@ -1,6 +1,9 @@
 package com.example.demo.server.servant.models;
 
 import javax.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * Contains IP address, port, flight identifier, and number of reserved seats
@@ -9,6 +12,9 @@ import javax.persistence.*;
 @Table(name = "flight_bookings", uniqueConstraints = {
         @UniqueConstraint(name = "uniqueClientID", columnNames = {"client_ip", "client_port"})
 })
+@NoArgsConstructor
+@Getter
+@Setter
 public class Bookings implements DataEntity{
     @EmbeddedId
     private ClientID clientID;
@@ -24,32 +30,6 @@ public class Bookings implements DataEntity{
         this.numSeats = numSeats;
     }
 
-    public Bookings() {}
-
-    public ClientID getClientID() {
-        return clientID;
-    }
-
-    public void setClientID(ClientID clientID) {
-        this.clientID = clientID;
-    }
-
-    public int getFlightID() {
-        return flightID;
-    }
-
-    public void setFlightID(int flightID) {
-        this.flightID = flightID;
-    }
-
-    public int getNumSeats() {
-        return numSeats;
-    }
-
-    public void setNumSeats(int numSeats) {
-        this.numSeats = numSeats;
-    }
-
     @Override
     public String toString() {
         return "FlightBookings{" +
@@ -57,5 +37,13 @@ public class Bookings implements DataEntity{
                 ", flightID=" + flightID +
                 ", numSeats=" + numSeats +
                 '}';
+    }
+
+    @Override
+    public String getClientDisplay() {
+        return "FlightBookings:\n" + 
+                "   Client ID = " + clientID + "\n" +
+                "   Flight ID = " + flightID + "\n" +
+                "   Number of Seats = " + numSeats + "\n";
     }
 }

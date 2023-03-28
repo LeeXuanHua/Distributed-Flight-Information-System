@@ -4,6 +4,12 @@ import java.time.LocalDateTime;
 
 import javax.persistence.*;
 
+import com.example.demo.utils.StringHelper;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
  * Contains IP address, port, flight identifier, and monitor interval
  */
@@ -12,6 +18,9 @@ import javax.persistence.*;
 @Table(name = "flight_monitoring", uniqueConstraints = {
         @UniqueConstraint(name = "uniqueClientID", columnNames = {"client_ip", "client_port"})
 })
+@NoArgsConstructor
+@Getter
+@Setter
 public class Monitoring implements DataEntity {
     @EmbeddedId
     private ClientID clientID;
@@ -27,32 +36,6 @@ public class Monitoring implements DataEntity {
         this.expiry = expiry;
     }
 
-    public Monitoring() {}
-
-    public ClientID getClientID() {
-        return clientID;
-    }
-
-    public void setClientID(ClientID clientID) {
-        this.clientID = clientID;
-    }
-
-    public int getFlightID() {
-        return flightID;
-    }
-
-    public void setFlightID(int flightID) {
-        this.flightID = flightID;
-    }
-
-    public LocalDateTime getExpiry() {
-        return expiry;
-    }
-
-    public void setExpiry(LocalDateTime expiry) {
-        this.expiry = expiry;
-    }
-
     @Override
     public String toString() {
         return "FlightMonitoring{" +
@@ -60,5 +43,13 @@ public class Monitoring implements DataEntity {
                 ", flightID=" + flightID +
                 ", monitorInterval=" + expiry +
                 '}';
+    }
+
+    @Override
+    public String getClientDisplay() {
+        return "FlightMonitoring:\n" +
+                "   Client ID = " + clientID + "\n" +
+                "   Flight ID = " + flightID + "\n" +
+                "   Expiry Time = " + StringHelper.formatLocalDateTime(expiry);
     }
 }

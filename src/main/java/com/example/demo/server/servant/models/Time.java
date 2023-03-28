@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
  * Self-defined time class to store the year, month, date, hours, min, sec, and ms in integers.
  * Provides methods to convert to DateTime object and vice versa (for Java JPA).
  */
-public class Time implements DataEntity {
+public class Time {
     private int year;
     private int month;
     private int date;

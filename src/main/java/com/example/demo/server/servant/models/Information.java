@@ -1,13 +1,22 @@
 package com.example.demo.server.servant.models;
 
 import javax.persistence.*;
+
+import com.example.demo.utils.StringHelper;
+
 import java.time.LocalDateTime;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * Contains flight identifier, source, destination, departure time, airfare, and seat availability
  */
 @Entity(name="Flight_Information")
 @Table(name="flight_information")
+@NoArgsConstructor
+@Getter
+@Setter
 public class Information implements DataEntity {
     @Id
 //    @SequenceGenerator(
@@ -42,56 +51,6 @@ public class Information implements DataEntity {
         this.seatAvailability = seatAvailability;
     }
 
-    public Information() {}
-
-    public int getFlightID() {
-        return flightID;
-    }
-
-    public void setFlightID(int flightID) {
-        this.flightID = flightID;
-    }
-
-    public String getsrc() {
-        return src;
-    }
-
-    public void setsrc(String src) {
-        this.src = src;
-    }
-
-    public String getdest() {
-        return dest;
-    }
-
-    public void setdest(String dest) {
-        this.dest = dest;
-    }
-
-    public LocalDateTime getDepartureTime() {
-        return departureTime;
-    }
-
-    public void setDepartureTime(LocalDateTime departureTime) {
-        this.departureTime = departureTime;
-    }
-
-    public double getAirfare() {
-        return airfare;
-    }
-
-    public void setAirfare(double airfare) {
-        this.airfare = airfare;
-    }
-
-    public int getSeatAvailability() {
-        return seatAvailability;
-    }
-
-    public void setSeatAvailability(int seatAvailability) {
-        this.seatAvailability = seatAvailability;
-    }
-
     @Override
     public String toString() {
         return "FlightInformation{" +
@@ -102,5 +61,16 @@ public class Information implements DataEntity {
                 ", airfare=" + airfare +
                 ", seatAvailability=" + seatAvailability +
                 '}';
+    }
+
+    @Override
+    public String getClientDisplay() {
+        return "FlightInformation:\n" +
+                "   Flight ID = " + flightID + "\n" +
+                "   Source = " + src + "\n" +
+                "   Destination = " + dest + "\n" +
+                "   Departure Time = " + StringHelper.formatLocalDateTime(departureTime) + "\n" +
+                "   Airfare = " + StringHelper.formatCurrency(airfare) + "\n" + 
+                "   Seat Availability = " + seatAvailability;
     }
 }
