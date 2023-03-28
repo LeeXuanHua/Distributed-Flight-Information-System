@@ -7,7 +7,6 @@ import com.example.demo.utils.MarshallUtil;
 import com.example.demo.utils.ReqOrReplyEnum;
 import com.example.demo.utils.Simulate;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.servlet.function.ServerResponse;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -63,24 +62,26 @@ public class AppClient {
             
             // Handle flight monitoring
             if (Integer.parseInt(choice) == 4) {
-                Optional<Monitoring> monitor = (Optional<Monitoring>) responseObject.getResponse().get();
-                if (monitor.isPresent()) {
-                    LocalDateTime expiry = monitor.get().getExpiry();
-                    handleCallback(expiry);
-                } else {
-                    System.out.println("Unable to monitor flight because it does not exist");
-                }                
+                if (responseObject.getResponse().isEmpty()) {
+                    System.out.println(responseObject.getServerMsg());
+                }
+                Monitoring monitor = (Monitoring) responseObject.getResponse().get();
+                LocalDateTime expiry = monitor.getExpiry();
+                handleCallback(expiry);
             }
 
         // anything requiring a socket function will need to have this catch block
         } catch (IOException e) {
-            log.error("IOError: " + e.getMessage());
+            log.error("22 IOError: " + e.getMessage());
         }
     }
 
     private void handleCallback(LocalDateTime expiryTime) throws IOException {
+        System.out.println("hiiiiiiiiiiiiiiiiiii in handelCallcback");
+        socket.setSoTimeout(0);
         while (LocalDateTime.now().isBefore(expiryTime)) {
-            socket.setSoTimeout(0);
+            System.out.println("NOW: " + LocalDateTime.now());
+            System.out.println("expiry : " + expiryTime);
             byte[] replyBuffer = new byte[1024];
             DatagramPacket replyPacket = new DatagramPacket(replyBuffer, replyBuffer.length);
             socket.receive(replyPacket);
@@ -93,9 +94,11 @@ public class AppClient {
             byte[] marshalledReply = replyPacket.getData();
             Object updatedFlight = MarshallUtil.unmarshall(marshalledReply);
         }
+        System.out.println("hiii outside while loop");
+        log.info("Monitoring expired");
     }
 
-    private Object receiveReply(DatagramPacket requestPacket) throws IOException {
+    private ServerReply receiveReply(DatagramPacket requestPacket) throws IOException {
         byte[] replyBuffer = new byte[1024];
         DatagramPacket replyPacket = new DatagramPacket(replyBuffer, replyBuffer.length);
         boolean receivedReply = false;
@@ -114,11 +117,11 @@ public class AppClient {
         }
 
         byte[] marshalledReply = replyPacket.getData();
-        Object unmarshalledReply = MarshallUtil.unmarshall(marshalledReply);
+        ServerReply unmarshalledReply = (ServerReply) MarshallUtil.unmarshall(marshalledReply);
         return unmarshalledReply;
     }
 
-    private Object handleRequest(DatagramPacket requestPacket) throws SocketException, IOException {
+    private ServerReply handleRequest(DatagramPacket requestPacket) throws SocketException, IOException {
         socket.setSoTimeout(5000);
         sendRequest(socket, requestPacket);
         return receiveReply(requestPacket);

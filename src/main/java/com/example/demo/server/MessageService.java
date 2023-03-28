@@ -43,7 +43,7 @@ public class MessageService {
 
         // anything requiring a socket function will need to have this catch block
         } catch (IOException e) {
-            log.error("IOError: " + e.getMessage());
+            log.error("11 IOError: " + e.getMessage());
         }
     }
 

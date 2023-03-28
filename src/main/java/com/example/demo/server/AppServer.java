@@ -55,7 +55,7 @@ public class AppServer {
 
         // anything requiring a socket function will need to have this catch block
         } catch (IOException e) {
-            log.error("IOError: " + e.getMessage());
+            log.error("33 IOError: " + e.getMessage());
         }
 
 //        // TESTING: Service 1

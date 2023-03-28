@@ -61,7 +61,8 @@ public class MonitoringImpl implements MonitoringInterface {
                 expiredMonitors.add(monitor);
             } else {
                 ServerReply reply = new ServerReply(true, "New monitoring update: ", Optional.of(updatedFlight));
-                messageService.sendMessageToClient(monitor.getClientID(), reply);
+//                messageService.sendMessageToClient(monitor.getClientID(), reply);
+                MessageService.getInstance().sendMessageToClient(monitor.getClientID(), reply);
             }
         }
         //lazy cleanup of expired monitoring channels
