@@ -1,11 +1,13 @@
 package com.example.demo.client;
 
+import com.example.demo.server.ServerReply;
 import com.example.demo.server.servant.models.Monitoring;
 import com.example.demo.utils.InputValidator;
 import com.example.demo.utils.MarshallUtil;
 import com.example.demo.utils.ReqOrReplyEnum;
 import com.example.demo.utils.Simulate;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.servlet.function.ServerResponse;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -56,12 +58,12 @@ public class AppClient {
             log.info("Marshalled request: " + marshalledRequest);
             DatagramPacket requestPacket = new DatagramPacket(marshalledRequest, marshalledRequest.length);
 
-            Object responseObject = handleRequest(requestPacket);
+            ServerReply responseObject = (ServerReply) handleRequest(requestPacket);
             log.info("Unmarshalled reply is: " + responseObject);
             
             // Handle flight monitoring
             if (Integer.parseInt(choice) == 4) {
-                Optional<Monitoring> monitor = (Optional<Monitoring>) responseObject;
+                Optional<Monitoring> monitor = (Optional<Monitoring>) responseObject.getResponse().get();
                 if (monitor.isPresent()) {
                     LocalDateTime expiry = monitor.get().getExpiry();
                     handleCallback(expiry);
@@ -86,7 +88,6 @@ public class AppClient {
 
             byte[] marshalledReply = replyPacket.getData();
             Object updatedFlight = MarshallUtil.unmarshall(marshalledReply);
-            System.out.println("The seat availability of the flight has changed to " + updatedFlight);
         }
     }
 
