@@ -47,9 +47,8 @@ public class Monitoring implements DataEntity {
 
     @Override
     public String getClientDisplay() {
-        return "FlightMonitoring:\n" +
-                "   Client ID = " + clientID + "\n" +
-                "   Flight ID = " + flightID + "\n" +
-                "   Expiry Time = " + StringHelper.formatLocalDateTime(expiry);
+        return  "Client ID = " + clientID + "\n" +
+                "Flight ID = " + flightID + "\n" +
+                "Expiry Time = " + StringHelper.formatLocalDateTime(expiry);
     }
 }

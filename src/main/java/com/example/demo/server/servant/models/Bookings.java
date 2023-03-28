@@ -41,9 +41,8 @@ public class Bookings implements DataEntity{
 
     @Override
     public String getClientDisplay() {
-        return "FlightBookings:\n" + 
-                "   Client ID = " + clientID + "\n" +
-                "   Flight ID = " + flightID + "\n" +
-                "   Number of Seats = " + numSeats + "\n";
+        return  "Client ID = " + clientID + "\n" +
+                "Flight ID = " + flightID + "\n" +
+                "No. of Seats = " + numSeats + "\n";
     }
 }

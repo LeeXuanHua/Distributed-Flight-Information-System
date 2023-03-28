@@ -62,7 +62,7 @@ public class AppClient {
 
             ServerReply responseObject = (ServerReply) handleRequest(requestPacket);
             log.info("Unmarshalled reply is: " + responseObject);
-            System.out.println(responseObject.getClientDisplay());
+            displayServerReply(responseObject);
             
             // Handle flight monitoring
             if (Integer.parseInt(choice) == 4) {
@@ -92,8 +92,9 @@ public class AppClient {
             socket.receive(replyPacket);
 
             byte[] marshalledReply = replyPacket.getData();
-            Object updatedFlight = MarshallUtil.unmarshall(marshalledReply);
+            ServerReply updatedFlight = (ServerReply) MarshallUtil.unmarshall(marshalledReply);
             log.info(updatedFlight.toString());
+            displayServerReply(updatedFlight);
         }
     }
 
@@ -130,5 +131,11 @@ public class AppClient {
         if (!(Simulate.isFailure(ReqOrReplyEnum.REQUEST))) {
             socket.send(requestPacket);
         }
+    }
+
+    private void displayServerReply(ServerReply reply) {
+        System.out.println();
+        System.out.println(reply.getServerMsg());
+        System.out.println(reply.getClientDisplay());
     }
 }

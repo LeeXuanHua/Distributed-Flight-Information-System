@@ -73,7 +73,7 @@ public abstract class Invocation {
                     ServerReply reply = new ServerReply(false, "ERROR message: the flight with the requested identifier " + Integer.parseInt(requestBodyParsed.get("flightID")) + " does not exist", Optional.empty());
                     return reply;
                 }
-                ServerReply reply = new ServerReply(true, "You will now monitor flight: " + Integer.parseInt(requestBodyParsed.get("flightID")) + " for the next " + Integer.parseInt(requestBodyParsed.get("monitorInterval")) + " seconds. The flight details are: ", Optional.of(res.get()));
+                ServerReply reply = new ServerReply(true, "You will now monitor flight " + Integer.parseInt(requestBodyParsed.get("flightID")) + " for the next " + Integer.parseInt(requestBodyParsed.get("monitorInterval")) + " seconds.", Optional.of(res.get()));
                 return reply;
             }
             case 5: {
@@ -82,7 +82,7 @@ public abstract class Invocation {
                     ServerReply reply = new ServerReply(false, "ERROR message: the flight with the requested identifier " + Integer.parseInt(requestBodyParsed.get("flightID")) + " under your name does not exist", Optional.empty());
                     return reply;
                 }
-                ServerReply reply = new ServerReply(true, "You have deleted your flight booking for " + Integer.parseInt(requestBodyParsed.get("flightID")) + ". Your booking was: ", Optional.of(res.get()));
+                ServerReply reply = new ServerReply(true, "You have deleted your flight booking for flight " + Integer.parseInt(requestBodyParsed.get("flightID")) + ". Your booking was: ", Optional.of(res.get()));
                 return reply;
             }
             case 6: {

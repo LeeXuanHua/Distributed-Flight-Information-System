@@ -65,12 +65,11 @@ public class Information implements DataEntity {
 
     @Override
     public String getClientDisplay() {
-        return "FlightInformation:\n" +
-                "   Flight ID = " + flightID + "\n" +
-                "   Source = " + src + "\n" +
-                "   Destination = " + dest + "\n" +
-                "   Departure Time = " + StringHelper.formatLocalDateTime(departureTime) + "\n" +
-                "   Airfare = " + StringHelper.formatCurrency(airfare) + "\n" + 
-                "   Seat Availability = " + seatAvailability;
+        return  "Flight ID = " + flightID + "\n" +
+                "Source = " + src + "\n" +
+                "Destination = " + dest + "\n" +
+                "Departure Time = " + StringHelper.formatLocalDateTime(departureTime) + "\n" +
+                "Airfare = " + StringHelper.formatCurrency(airfare) + "\n" + 
+                "Seat Availability = " + seatAvailability;
     }
 }
