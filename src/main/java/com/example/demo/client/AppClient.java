@@ -13,7 +13,10 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -70,32 +73,27 @@ public class AppClient {
                 handleCallback(expiry);
             }
 
-        // anything requiring a socket function will need to have this catch block
+        // we will reach here when the socket times out in the monitoring phase
         } catch (IOException e) {
-            log.error("22 IOError: " + e.getMessage());
+            log.info("Monitoring has expired");
         }
     }
 
     private void handleCallback(LocalDateTime expiryTime) throws IOException {
-        System.out.println("hiiiiiiiiiiiiiiiiiii in handelCallcback");
-        socket.setSoTimeout(0);
-        while (LocalDateTime.now().isBefore(expiryTime)) {
-            System.out.println("NOW: " + LocalDateTime.now());
-            System.out.println("expiry : " + expiryTime);
+        while (true) {
+            if (LocalDateTime.now().isBefore(expiryTime)) {
+                socket.setSoTimeout((int) Duration.between(LocalDateTime.now(), expiryTime).toMillis());
+            } else {
+                socket.setSoTimeout(1);
+            }
             byte[] replyBuffer = new byte[1024];
             DatagramPacket replyPacket = new DatagramPacket(replyBuffer, replyBuffer.length);
             socket.receive(replyPacket);
 
-            if (LocalDateTime.now().isAfter(expiryTime)) {
-                socket.setSoTimeout(5000);
-                break;
-            }
-
             byte[] marshalledReply = replyPacket.getData();
             Object updatedFlight = MarshallUtil.unmarshall(marshalledReply);
+            log.info(updatedFlight.toString());
         }
-        System.out.println("hiii outside while loop");
-        log.info("Monitoring expired");
     }
 
     private ServerReply receiveReply(DatagramPacket requestPacket) throws IOException {
