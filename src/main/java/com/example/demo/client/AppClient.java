@@ -62,6 +62,7 @@ public class AppClient {
 
             ServerReply responseObject = (ServerReply) handleRequest(requestPacket);
             log.info("Unmarshalled reply is: " + responseObject);
+            System.out.println(responseObject.getClientDisplay());
             
             // Handle flight monitoring
             if (Integer.parseInt(choice) == 4) {

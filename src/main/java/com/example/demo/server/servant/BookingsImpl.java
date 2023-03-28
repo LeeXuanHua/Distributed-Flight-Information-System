@@ -57,7 +57,6 @@ public class BookingsImpl implements BookingsInterface {
             throw new InsufficientSeatsException();
         }
 
-//        int actualBookedSeats = numSeats <= availableSeats ? numSeats : availableSeats ;
         bookingsRepository.insertFlightBookings(clientID.getIP(), clientID.getPort(), flightID, numSeats);
         informationRepository.updateFlightsSeatAvailability(flightID, availableSeats - numSeats);
         monitoringService.SendUpdateToMonitorList(flightID);

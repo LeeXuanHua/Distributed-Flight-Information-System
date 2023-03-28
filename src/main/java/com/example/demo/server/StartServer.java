@@ -35,9 +35,6 @@ public class StartServer {
     public static InvocationAtMostOnce invocationAtMostOnce;
 
     public static void main(String[] args) {
-
-
-
         Scanner scanner = new Scanner(System.in);
 
         // 1. commandLineRunner is first run

@@ -7,6 +7,8 @@ import lombok.Setter;
 
 import java.util.Optional;
 
+import com.example.demo.server.servant.models.DataEntity;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -21,5 +23,10 @@ public class ServerReply {
         return "Operation " + (this.isSuccess() ? "succeeded." : "failed.") +
                 " ServerMsg='" + this.getServerMsg() + "'" +
                 ", response=" + this.getResponse();
+    }
+
+    public String getClientDisplay() {
+        if (!response.isPresent()) return toString();
+        return ((DataEntity) response.get()).getClientDisplay();
     }
 }
