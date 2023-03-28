@@ -1,6 +1,7 @@
 package com.example.demo.utils;
 
 import java.lang.reflect.Field;
+import java.nio.ByteOrder;
 import java.time.LocalDateTime;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
@@ -16,22 +17,7 @@ public class MarshallUtil {
     public static final int LONG_SIZE = 8;
     public static final int FLOAT_SIZE = 4;
     public static final int DOUBLE_SIZE = 8;
-
-    //todo add List<Object> parsing since some queries are returning a list of objects rather than a single object
-    //todo add Optional<Object> parsing since some queries are returning an Optional object rather than a single object
-    //todo add Header class to wrap the message and add the header to the message (to discuss with Wayne)
-
-//    //todo now it just returns itself
-//    public static byte[] marshall(byte[] input) {
-//        byte[] res = input;
-//        return res;
-//    }
-//
-//    //todo now it just returns itself
-//    public static byte[] unmarshall(byte[] input) {
-//        byte[] res = input;
-//        return res;
-//    }
+    public static final boolean hostIsBigEndian = ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN);
 
     public static byte[] marshall(Object obj) {
        List<Byte> message = new ArrayList<Byte>();
