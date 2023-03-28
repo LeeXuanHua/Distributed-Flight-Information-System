@@ -30,6 +30,10 @@ public abstract class Invocation {
     protected ServerReply callServant(ClientID clientID, int serviceId, String requestBody) {
         HashMap<String, String> requestBodyParsed = DeconstructAttribute(requestBody);
         switch (serviceId) {
+            case 0: {
+                ServerReply reply = new ServerReply(true, "Successfully pinged server", Optional.empty());
+                return reply;
+            }
             case 1: {
                 List<Information> res = information.GetFlightsBySourceAndDestination(requestBodyParsed.get("src"), requestBodyParsed.get("dst"));
                 if (res.isEmpty()) {

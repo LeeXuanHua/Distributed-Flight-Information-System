@@ -80,6 +80,29 @@ public class AppClient {
         }
     }
 
+    public boolean pingServer() {
+        ClientRequest clientRequest = ClientServices.getPingClientRequest();
+        byte[] marshalledRequest = MarshallUtil.marshall(clientRequest);
+        DatagramPacket requestPacket = new DatagramPacket(marshalledRequest, marshalledRequest.length);
+        
+        try {
+            socket.setSoTimeout(2000);
+            socket.send(requestPacket);
+
+            byte[] replyBuffer = new byte[1024];
+            DatagramPacket replyPacket = new DatagramPacket(replyBuffer, replyBuffer.length);
+
+            socket.receive(replyPacket);
+
+            byte[] marshalledReply = replyPacket.getData();
+            ServerReply responseObject = (ServerReply) MarshallUtil.unmarshall(marshalledReply);
+            System.out.println(responseObject.getServerMsg());
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
     private void handleCallback(LocalDateTime expiryTime) throws IOException {
         while (true) {
             if (LocalDateTime.now().isBefore(expiryTime)) {

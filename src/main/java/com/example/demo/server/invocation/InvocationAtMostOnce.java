@@ -23,7 +23,7 @@ public class InvocationAtMostOnce extends Invocation {
         ClientID clientID = new ClientID(clientAddress, clientPort);
         InvocationID invocationID = new InvocationID(clientID, clientRequest.getMessageId());
         ServerReply res;
-        if (InvocationHistory.containsKey(invocationID)) {
+        if (InvocationHistory.containsKey(invocationID) && clientRequest.getMessageId() >= 0) {
             res = InvocationHistory.get(invocationID);
             log.warn("!!! WARNING: Duplicate request detected. Returning cached reply.");
         } else {

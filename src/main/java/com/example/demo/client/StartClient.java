@@ -12,29 +12,36 @@ import java.util.Scanner;
 
 @Slf4j
 public class StartClient {
+    static int PORT = AppServer.PORT;
     static DatagramSocket socket;
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        AppClient client;
 
-        // 1. Get IP address
-        String input;
-        do {
-            System.out.println("\n===============================");
-            System.out.print("Please input the IP address of the server: ");
-            input = scanner.next();
-        } while (!InputValidator.isValidIp(input));
+        while (true) {
+            // 1. Get IP address
+            String input;
+            do {
+                System.out.println("\n===============================");
+                System.out.print("Please input the IP address of the server: ");
+                input = scanner.next();
+            } while (!InputValidator.isValidIp(input));
 
-        int PORT = AppServer.PORT;
+            // 2. Initiate socket connection
+            try {
+                socket = new DatagramSocket();
+                socket.connect(InetAddress.getByName(input), PORT);
+            } catch (SocketException | UnknownHostException e) {
+                log.error("Socket or UnknownHost Error: " + e.getMessage());
+            }
 
-        // 2. Initiate socket connection
-        try {
-            socket = new DatagramSocket();
-            socket.connect(InetAddress.getByName(input), PORT);
-        } catch (SocketException | UnknownHostException e) {
-            log.error("Socket or UnknownHost Error: " + e.getMessage());
+            client = new AppClient(socket);
+            if (client.pingServer()) {
+                break;
+            } else {
+                log.error("Server is either offline or you have entered an invalid IP address.");
+            }
         }
-
-        AppClient client = new AppClient(socket);
 
         while (true) {
             client.run();

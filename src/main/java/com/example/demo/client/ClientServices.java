@@ -100,4 +100,8 @@ public class ClientServices {
     public static String ConstructAttribute(String key, String value) {
         return key + MarshallUtil.KV_PAIR + value + MarshallUtil.DELIMITER;
     }
+
+    public static ClientRequest getPingClientRequest() {
+        return new ClientRequest(-1, 0, "Client Ping");
+    }
 }
