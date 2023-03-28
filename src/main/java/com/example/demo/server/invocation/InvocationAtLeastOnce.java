@@ -1,5 +1,6 @@
 package com.example.demo.server.invocation;
 
+import com.example.demo.server.ServerReply;
 import com.example.demo.server.servant.BookingsImpl;
 import com.example.demo.server.servant.InformationImpl;
 import com.example.demo.server.servant.MonitoringImpl;
@@ -12,7 +13,7 @@ public class InvocationAtLeastOnce extends Invocation {
     }
 
     @Override
-    public Object handleRequest(String clientAddress, int clientPort, ClientRequest clientRequest) {
+    public ServerReply handleRequest(String clientAddress, int clientPort, ClientRequest clientRequest) {
         ClientID clientID = new ClientID(clientAddress, clientPort);
         return callServant(clientID, clientRequest.getServiceId(), clientRequest.getRequestBody());
     }

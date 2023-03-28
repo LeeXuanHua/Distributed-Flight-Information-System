@@ -59,11 +59,11 @@ public class ClientID implements Serializable {
         return result;
     }
 
-    //    @Override
-//    public String toString() {
-//        return "ClientID{" +
-//                "IP='" + IP + '\'' +
-//                ", port=" + port +
-//                '}';
-//    }
+    @Override
+    public String toString() {
+        return "ClientID{" +
+                "IP='" + IP + '\'' +
+                ", port=" + port +
+                '}';
+    }
 }

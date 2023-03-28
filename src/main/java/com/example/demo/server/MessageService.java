@@ -29,7 +29,7 @@ public class MessageService {
         return INSTANCE;
     }
 
-    public void sendMessageToClient(InetAddress clientAddress, int clientPort, Object unmarshalledMessage) {
+    public void sendMessageToClient(InetAddress clientAddress, int clientPort, ServerReply unmarshalledMessage) {
         try {
             log.info("The reply message before marshalling is: " + unmarshalledMessage);
 
@@ -47,7 +47,7 @@ public class MessageService {
         }
     }
 
-    public void sendMessageToClient(ClientID clientID, byte[] unmarshalledMessage) {
+    public void sendMessageToClient(ClientID clientID, ServerReply unmarshalledMessage) {
         try {
             sendMessageToClient(InetAddress.getByName(clientID.getIP()), clientID.getPort(), unmarshalledMessage);
         } catch (UnknownHostException e) {

@@ -25,10 +25,10 @@ public abstract class Invocation {
         this.monitoring = monitoring;
         this.information = information;
     }
-    public abstract Object handleRequest(String clientAddress, int clientPort, ClientRequest clientRequest);
+    public abstract ServerReply handleRequest(String clientAddress, int clientPort, ClientRequest clientRequest);
 
-    protected Object callServant(ClientID clientID, int serviceId, String requestBody) {
-        HashMap<String, String> requestBodyParsed = Deserialise(requestBody);
+    protected ServerReply callServant(ClientID clientID, int serviceId, String requestBody) {
+        HashMap<String, String> requestBodyParsed = DeconstructAttribute(requestBody);
         switch (serviceId) {
             case 1: {
                 List<Information> res = information.GetFlightsBySourceAndDestination(requestBodyParsed.get("src"), requestBodyParsed.get("dst"));
@@ -100,7 +100,7 @@ public abstract class Invocation {
         return null;
     }
 
-    private HashMap<String, String> Deserialise(String str){
+    private HashMap<String, String> DeconstructAttribute(String str){
         int l = 0;
         String key = null;
         HashMap<String, String> res = new HashMap<>();

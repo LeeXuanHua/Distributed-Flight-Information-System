@@ -1,5 +1,6 @@
 package com.example.demo.server.servant;
 
+import com.example.demo.server.ServerReply;
 import com.example.demo.server.servant.models.*;
 import com.example.demo.server.MessageService;
 import com.example.demo.server.repositories.InformationRepository;
@@ -59,7 +60,8 @@ public class MonitoringImpl implements MonitoringInterface {
             if (now.isAfter(monitor.getExpiry())) {
                 expiredMonitors.add(monitor);
             } else {
-                messageService.sendMessageToClient(monitor.getClientID(), updatedFlight.toString().getBytes());
+                ServerReply reply = new ServerReply(true, "New monitoring update: ", Optional.of(updatedFlight));
+                messageService.sendMessageToClient(monitor.getClientID(), reply);
             }
         }
         //lazy cleanup of expired monitoring channels

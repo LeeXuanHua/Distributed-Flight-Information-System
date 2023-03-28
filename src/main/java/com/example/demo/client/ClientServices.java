@@ -33,7 +33,7 @@ public class ClientServices {
         System.out.print("Please input your desired flight destination: ");
         String dst = scanner.nextLine();
 
-        String requestBody = Serialise("src", src) + Serialise("dst", dst);
+        String requestBody = ConstructAttribute("src", src) + ConstructAttribute("dst", dst);
         ClientRequest clientRequest = new ClientRequest(messageId, 1, requestBody);
         return clientRequest;
     }
@@ -43,7 +43,7 @@ public class ClientServices {
         System.out.print("Please input the ID of your desired flight: ");
         String flightID = scanner.nextLine();
 
-        String requestBody = Serialise("flightID", flightID);
+        String requestBody = ConstructAttribute("flightID", flightID);
         ClientRequest clientRequest = new ClientRequest(messageId, 2, requestBody);
         return clientRequest;
     }
@@ -56,7 +56,7 @@ public class ClientServices {
         System.out.print("Please input the number of seats you would like to book: ");
         String numSeats = scanner.nextLine();
 
-        String requestBody = Serialise("flightID", flightID) + Serialise("numSeats", numSeats);
+        String requestBody = ConstructAttribute("flightID", flightID) + ConstructAttribute("numSeats", numSeats);
         ClientRequest clientRequest = new ClientRequest(messageId, 3, requestBody);
         return clientRequest;
     }
@@ -69,7 +69,7 @@ public class ClientServices {
         System.out.print("Please input the duration you would like to monitor for (in seconds): ");
         String monitorInterval = scanner.nextLine();
 
-        String requestBody = Serialise("flightID", flightID) + Serialise("monitorInterval", monitorInterval);
+        String requestBody = ConstructAttribute("flightID", flightID) + ConstructAttribute("monitorInterval", monitorInterval);
         ClientRequest clientRequest = new ClientRequest(messageId, 4, requestBody);
         return clientRequest;
     }
@@ -79,7 +79,7 @@ public class ClientServices {
         System.out.print("Please input the ID of your desired flight: ");
         String flightID = scanner.nextLine();
 
-        String requestBody = Serialise("flightID", flightID);
+        String requestBody = ConstructAttribute("flightID", flightID);
         ClientRequest clientRequest = new ClientRequest(messageId, 5, requestBody);
         return clientRequest;
     }
@@ -92,12 +92,12 @@ public class ClientServices {
         System.out.print("Please input the number of seats you would like to increase your booking by: ");
         String numSeats = scanner.nextLine();
 
-        String requestBody = Serialise("flightID", flightID) + Serialise("numSeats", numSeats);
+        String requestBody = ConstructAttribute("flightID", flightID) + ConstructAttribute("numSeats", numSeats);
         ClientRequest clientRequest = new ClientRequest(messageId, 6, requestBody);
         return clientRequest;
     }
 
-    public static String Serialise(String key, String value) {
+    public static String ConstructAttribute(String key, String value) {
         return key + MarshallUtil.KV_PAIR + value + MarshallUtil.DELIMITER;
     }
 }

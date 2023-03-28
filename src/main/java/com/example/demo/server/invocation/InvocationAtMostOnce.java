@@ -1,5 +1,6 @@
 package com.example.demo.server.invocation;
 
+import com.example.demo.server.ServerReply;
 import com.example.demo.server.servant.BookingsImpl;
 import com.example.demo.server.servant.InformationImpl;
 import com.example.demo.server.servant.MonitoringImpl;
@@ -11,17 +12,17 @@ import java.util.HashMap;
 
 @Slf4j
 public class InvocationAtMostOnce extends Invocation {
-    private HashMap<InvocationID, Object> InvocationHistory = new HashMap<>();
+    private HashMap<InvocationID, ServerReply> InvocationHistory = new HashMap<>();
 
     public InvocationAtMostOnce(BookingsImpl bookings, MonitoringImpl monitoring, InformationImpl information) {
         super(bookings, monitoring, information);
     }
 
     @Override
-    public Object handleRequest(String clientAddress, int clientPort, ClientRequest clientRequest) {
+    public ServerReply handleRequest(String clientAddress, int clientPort, ClientRequest clientRequest) {
         ClientID clientID = new ClientID(clientAddress, clientPort);
         InvocationID invocationID = new InvocationID(clientID, clientRequest.getMessageId());
-        Object res;
+        ServerReply res;
         if (InvocationHistory.containsKey(invocationID)) {
             res = InvocationHistory.get(invocationID);
             log.warn("!!! WARNING: Duplicate request detected. Returning cached reply.");

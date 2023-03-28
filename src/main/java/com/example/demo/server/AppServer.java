@@ -48,7 +48,7 @@ public class AppServer {
 
             // 3. With the client IP and port, ClientRequest, and requestString,
             //    let the invocInterface handle the request based on the required invocation semantic
-            Object unmarshalledReply = invocation.handleRequest(clientAddress.getHostAddress(), clientPort, clientRequest);
+            ServerReply unmarshalledReply = invocation.handleRequest(clientAddress.getHostAddress(), clientPort, clientRequest);
 
             // 4. Marshall the reply and send
             messageService.sendMessageToClient(clientAddress, clientPort, unmarshalledReply);

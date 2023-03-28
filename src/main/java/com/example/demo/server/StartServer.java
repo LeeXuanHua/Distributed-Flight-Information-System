@@ -97,9 +97,12 @@ public class StartServer {
             informationRepository.save(new Information(1, "Singapore", "China",
                     LocalDateTime.of(2023, Month.JANUARY, 1, 1, 1, 1),
                     10.00, 10));
+            informationRepository.save(new Information(2, "Singapore", "China",
+                    LocalDateTime.of(2022, Month.JANUARY, 1, 1, 1, 1),
+                    20.00, 20));
 
             // Seeding for TESTING: 5-6
-            ClientID lol = new ClientID("12345", 8080);
+            ClientID lol = new ClientID("128.0.0.1", 8888);
             bookingsRepository.save(new Bookings(lol, 1, 1));
 
             // FlightInformationRepository
