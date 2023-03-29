@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.Scanner;
 
+// Class to simulate communication omission failure for both replies and requests
 @Slf4j
 public class Simulate {
     public static int FAILURE_RATE;

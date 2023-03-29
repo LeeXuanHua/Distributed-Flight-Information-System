@@ -83,10 +83,12 @@ public class Time {
         this.ms = ms;
     }
 
+    // Convert to DateTime object - note that LocalDateTime uses nanoseconds instead of milliseconds
     public LocalDateTime toDateTime() {
         return LocalDateTime.of(year, month, date, hours, min, sec, ms * 1000);
     }
 
+    // Convert from DateTime object - note that LocalDateTime uses nanoseconds instead of milliseconds
     public static Time fromDateTime(LocalDateTime dt) {
         return new Time(dt.getYear(), dt.getMonthValue(), dt.getDayOfMonth(),
                 dt.getHour(), dt.getMinute(), dt.getSecond(), dt.getNano() / 1000);

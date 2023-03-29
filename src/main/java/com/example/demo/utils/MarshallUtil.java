@@ -10,6 +10,7 @@ import com.example.demo.server.servant.models.Time;
 
 @Slf4j
 public class MarshallUtil {
+    // Defining the delimiters and data type sizes
     public static final char KV_PAIR = ':';
     public static final char DELIMITER = '|';
     public static final int BOOL_SIZE = 1;
@@ -19,6 +20,7 @@ public class MarshallUtil {
     public static final int DOUBLE_SIZE = 8;
     public static final boolean hostIsBigEndian = ByteOrder.nativeOrder().equals(ByteOrder.BIG_ENDIAN);
 
+    // Entry point for marshalling
     public static byte[] marshall(Object obj) {
        List<Byte> message = new ArrayList<Byte>();
 
@@ -29,29 +31,7 @@ public class MarshallUtil {
        return MarshallUtil.byteUnboxing(message);
     }
 
-    public static byte[] marshall(Optional obj) {
-        List<Byte> message = new ArrayList<Byte>();
-
-        // Check if the object is present
-        // If present - append the Optional class name and 0 to the message, and process it as per normal
-        // If not present - append the Optional class name and 0 to the message, and terminate
-        if (obj.isPresent()) {
-            // Append the classname and number of objects to the message
-            appendMessage(message, obj.getClass().getTypeName());
-            appendMessage(message, 1);
-
-            // Parsing the object and appending the message
-            marshallParsing(message, obj.get());
-        } else {
-            // Append the classname and number of objects to the message
-            appendMessage(message, obj.getClass().getTypeName());
-            appendMessage(message, 0);
-        }
-
-        // Convert the list of Bytes to 1 array of Bytes
-        return MarshallUtil.byteUnboxing(message);
-    }
-
+    // To handle the case where the object is Optional
     private static void marshall(Optional obj, List<Byte> message) {
         // Check if the object is present
         // If present - append the Optional class name and 0 to the message, and process it as per normal
@@ -70,21 +50,7 @@ public class MarshallUtil {
         }
     }
 
-    public static byte[] marshall(List<Object> objList) {
-        List<Byte> message = new ArrayList<Byte>();
-
-        // Append the classname and number of objects to the message
-        appendMessage(message, objList.getClass().getTypeName());
-        appendMessage(message, objList.size());
-
-        // Parsing the object and appending the message
-        for (Object obj : objList)
-            marshallParsing(message, obj);
-
-        // Convert the list of Bytes to 1 array of Bytes
-        return MarshallUtil.byteUnboxing(message);
-    }
-
+    // To handle the case where the object is a List
     private static void marshall(List<Object> objList, List<Byte> message) {
         // Append the classname and number of objects to the message
         appendMessage(message, objList.getClass().getTypeName());
@@ -95,6 +61,7 @@ public class MarshallUtil {
             marshallParsing(message, obj);
     }
 
+    // Recursive method to parse the object and append the message
     private static void marshallParsing(List<Byte> message, Object obj) {
         String className = obj.getClass().getTypeName();
 
@@ -154,6 +121,7 @@ public class MarshallUtil {
         }
     }
 
+    // Entry point for unmarshalling
     public static Object unmarshall(byte[] b) {
         int ptr = 0;    // Pointer to the current position in the byte array
 
@@ -166,6 +134,7 @@ public class MarshallUtil {
         return obj;
     }
 
+    // Recursive method to unmarshall - by parsing the byte array and populating the object fields
     private static Map<Object, Integer> unmarshallParsing(byte[] b, int ptr) {
         // Create a HashMap to store the object and the latest pointer
         Map<Object, Integer> objectAndPtr = new HashMap<>();
@@ -304,8 +273,8 @@ public class MarshallUtil {
         return objectAndPtr;
     }
 
+    // Sets a field of an object to a value and makes it accessible if it is not, using reflection
     private static void set(Object object, String fieldName, Object fieldValue) {
-        // Sets a field of an object to a value and makes it accessible if it is not, using reflection
         Class<?> refClass = object.getClass();
         while (refClass != null) {
             try {

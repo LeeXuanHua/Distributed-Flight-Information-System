@@ -3,6 +3,7 @@ package com.example.demo.utils;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+// Helper class to format strings for display (client-side)
 public class StringHelper {
     public static String formatCurrency(double currency) {
         return "$" + currency;
