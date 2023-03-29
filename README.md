@@ -14,3 +14,6 @@ Design and Implementation of A Distributed Flight Information System for Distrib
    spring.datasource.username=
    spring.datasource.password=
 ```
+3. Run `mvn clean compile`
+4. If you want to run the client, run `mvn exec:java@client`
+5. If you want to run the server, run `mvn exec:java@server`
