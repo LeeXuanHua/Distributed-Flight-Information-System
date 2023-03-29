@@ -15,15 +15,13 @@ import java.util.Optional;
 @Repository
 @Transactional(readOnly = false)
 public interface InformationRepository extends PagingAndSortingRepository<Information, Integer> {
-        // For service 1 - query the flight identifier(s) by specifying the source and
-        // destination places
+        // For service 1 - query the flight identifier(s) by specifying the source and destination places
         @Query(value = "SELECT * FROM Flight_Information WHERE source = :src AND destination = :dest", nativeQuery = true)
         List<Information> findFlightsBySrcAndDest(
                         @Param("src") String src,
                         @Param("dest") String dest);
 
-        // For service 2 - query the departure time, airfare and seat availability by
-        // specifying the flight identifier
+        // For service 2 - query the departure time, airfare and seat availability by specifying the flight identifier
         @Query(value = "SELECT f FROM Flight_Information f WHERE f.flightID = ?1")
         Optional<Information> findFlightsByFlightID(int flightID);
 

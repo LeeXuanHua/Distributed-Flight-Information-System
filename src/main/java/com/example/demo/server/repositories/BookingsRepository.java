@@ -16,16 +16,14 @@ import java.util.Optional;
 @Repository
 @Transactional(readOnly = false)
 public interface BookingsRepository extends PagingAndSortingRepository<Bookings, ClientID> {
-        // For service 3 & 5 - make seat reservation by specifying the flight identifier
-        // and the number of seats to reserve
-        // Check if clientID and flightID exists in the database
+        // Check for existing booking by clientID and flightID
         @Query(value = "SELECT * FROM Flight_Bookings WHERE client_ip = :clientIP AND client_port = :clientPort AND flight_identifier = :flightID", nativeQuery = true)
         Optional<Bookings> findFlightBookingsByClientIDAndFlightID(
                 @Param("clientIP") String clientIP,
                 @Param("clientPort") int clientPort,
                 @Param("flightID") int flightID);
 
-        // Add new record if above does not exist
+        // Service 3 - Add new reservation
         @Transactional
         @Modifying
         @Query(value = "INSERT INTO Flight_Bookings (client_ip, client_port, flight_identifier, number_of_reserved_seats) VALUES (:clientIP, :clientPort, :flightID, :seatAvailability)", nativeQuery = true)
@@ -54,6 +52,7 @@ public interface BookingsRepository extends PagingAndSortingRepository<Bookings,
                 @Param("flightID") int flightID,
                 @Param("seatAvailability") int seatAvailability);
 
+        // Get all flight bookings - for debugging
         @Query(value = "SELECT * FROM Flight_Bookings", nativeQuery = true)
         List<Bookings> findAllFlightBookings();
 }

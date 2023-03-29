@@ -8,6 +8,8 @@ import com.example.demo.utils.MarshallUtil;
 public class ClientServices {
     public static ClientRequest getService(int messageId, String serviceId, Scanner scanner) {
         scanner.nextLine();
+        // Get a ClientRequest object, based on user input.
+        // Prompts and required inputs will change based on the service requested
         switch (serviceId) {
             case "1":
                 return getFlightsBySrcAndDst(messageId, scanner);
@@ -40,7 +42,7 @@ public class ClientServices {
     }
 
     private static ClientRequest getFlightsById(int messageId, Scanner scanner) {
-        System.out.println("You have selected Service 2: Get Flights by ID");
+        System.out.println("You have selected Service 2: Get Flight by ID");
         String flightID = getUserInputInteger(scanner, "Please input the ID of your desired flight: ");
 
         String requestBody = ConstructAttribute("flightID", flightID);
@@ -96,6 +98,7 @@ public class ClientServices {
         return input;
     }
 
+    // Convert a key-value pair to a string, to be used as part of requestBody 
     public static String ConstructAttribute(String key, String value) {
         return key + MarshallUtil.KV_PAIR + value + MarshallUtil.DELIMITER;
     }

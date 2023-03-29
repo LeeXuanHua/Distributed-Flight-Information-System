@@ -14,6 +14,8 @@ public class InvocationAtLeastOnce extends Invocation {
 
     @Override
     public ServerReply handleRequest(String clientAddress, int clientPort, ClientRequest clientRequest) {
+        // Do not need to keep track of previous requests 
+        // Can just call the services directly without overhead
         ClientID clientID = new ClientID(clientAddress, clientPort);
         return callServant(clientID, clientRequest.getServiceId(), clientRequest.getRequestBody());
     }

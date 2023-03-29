@@ -8,13 +8,11 @@ import com.example.demo.server.servant.MonitoringImpl;
 import com.example.demo.server.servant.models.*;
 import com.example.demo.utils.InsufficientSeatsException;
 import com.example.demo.utils.MarshallUtil;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-@Slf4j
 public abstract class Invocation {
     private BookingsImpl bookings;
     private MonitoringImpl monitoring;
@@ -27,6 +25,8 @@ public abstract class Invocation {
     }
     public abstract ServerReply handleRequest(String clientAddress, int clientPort, ClientRequest clientRequest);
 
+    // Call service based on serviceId.
+    // Returns a ServerReply object
     protected ServerReply callServant(ClientID clientID, int serviceId, String requestBody) {
         HashMap<String, String> requestBodyParsed = DeconstructAttribute(requestBody);
         switch (serviceId) {
@@ -104,6 +104,7 @@ public abstract class Invocation {
         return null;
     }
 
+    // Parses requestBody from ClientRequest to get required parameters for services.
     private HashMap<String, String> DeconstructAttribute(String str){
         int l = 0;
         String key = null;

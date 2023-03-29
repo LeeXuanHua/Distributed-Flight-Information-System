@@ -39,7 +39,7 @@ public class AppClient {
             do {
                 System.out.println("\n===============================");
                 System.out.println("1: Get Flights by Source & Destination");
-                System.out.println("2: Get Flights by ID");
+                System.out.println("2: Get Flight by ID");
                 System.out.println("3: Book seats on a flight");
                 System.out.println("4: Monitor flight availability");
                 System.out.println("5: Delete flight booking");
@@ -49,6 +49,7 @@ public class AppClient {
                 choice = scanner.next();
             } while (!InputValidator.isInteger(choice, Optional.of(1), Optional.of(7)));
 
+            // Terminate client
             if (Integer.parseInt(choice) == 7) {
                 return false;
             }
@@ -60,6 +61,7 @@ public class AppClient {
             log.info("Marshalled request: " + marshalledRequest);
             DatagramPacket requestPacket = new DatagramPacket(marshalledRequest, marshalledRequest.length);
 
+            // 3. Send request and receive reply
             ServerReply responseObject = (ServerReply) handleRequest(requestPacket);
             log.info("Unmarshalled reply is: " + responseObject);
             displayServerReply(responseObject);
@@ -84,14 +86,20 @@ public class AppClient {
     private void handleCallback(LocalDateTime expiryTime) throws IOException {
         while (true) {
             if (LocalDateTime.now().isBefore(expiryTime)) {
+                // Set timeout based on time remaining to expiry
                 socket.setSoTimeout((int) Duration.between(LocalDateTime.now(), expiryTime).toMillis());
             } else {
+                // Monitoring has expired - Force socket to timeout
                 socket.setSoTimeout(1);
             }
+            // Prepare buffer to receive updates
             byte[] replyBuffer = new byte[1024];
             DatagramPacket replyPacket = new DatagramPacket(replyBuffer, replyBuffer.length);
+
+            // Block and wait for updates from server
             socket.receive(replyPacket);
 
+            // Recevied update from server - unmarshall and display updated flight information
             byte[] marshalledReply = replyPacket.getData();
             ServerReply updatedFlight = (ServerReply) MarshallUtil.unmarshall(marshalledReply);
             log.info(updatedFlight.toString());
@@ -100,23 +108,25 @@ public class AppClient {
     }
 
     private ServerReply receiveReply(DatagramPacket requestPacket) throws IOException {
+        // Prepare buffer to receive reply
         byte[] replyBuffer = new byte[1024];
         DatagramPacket replyPacket = new DatagramPacket(replyBuffer, replyBuffer.length);
         boolean receivedReply = false;
 
-        // Listen for reply
-        // If did not simulate a request message loss, then send request
+        // Continuously listen for reply until one is received
         while (!receivedReply) {
             try {
                 socket.receive(replyPacket);
                 log.info("Reply received: " + replyPacket.getData());
                 receivedReply = true;
             } catch (SocketTimeoutException e) {
+                // Socket timed out - resend request and wait for reply again
                 log.info("No reply received. Resending request...");
                 sendRequest(socket, requestPacket);
             }
         }
 
+        // Reply received - unmarshall reply and return
         byte[] marshalledReply = replyPacket.getData();
         ServerReply unmarshalledReply = (ServerReply) MarshallUtil.unmarshall(marshalledReply);
         return unmarshalledReply;
@@ -129,6 +139,7 @@ public class AppClient {
     }
 
     private void sendRequest(DatagramSocket socket, DatagramPacket requestPacket) throws IOException {
+        // Simulate possible request failure - only send request to server if did not fail
         if (!(Simulate.isFailure(ReqOrReplyEnum.REQUEST))) {
             socket.send(requestPacket);
         }

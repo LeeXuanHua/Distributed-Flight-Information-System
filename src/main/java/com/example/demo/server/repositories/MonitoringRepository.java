@@ -17,8 +17,7 @@ import java.util.Optional;
 @Repository
 @Transactional(readOnly = false)
 public interface MonitoringRepository extends PagingAndSortingRepository<Monitoring, ClientID> {
-    // For service 4 - monitor updates made to seat availability information of a flight at the server through callback
-    // for a designated time period (monitor interval)
+    // For service 4 - monitor updates made to seat availability information of a flight at the server through callback for a designated time period (monitor interval)
 
     // Check if clientID and flightID exists in the database
     @Query(value = "SELECT * FROM Flight_Monitoring WHERE client_ip = :clientIP AND client_port = :clientPort AND flight_identifier = :flightID", nativeQuery = true)

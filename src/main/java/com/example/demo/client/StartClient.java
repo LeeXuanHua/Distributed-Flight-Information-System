@@ -16,7 +16,7 @@ public class StartClient {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        // 1. Get IP address
+        // 1. Get IP address of server
         String input;
         do {
             System.out.println("\n===============================");
