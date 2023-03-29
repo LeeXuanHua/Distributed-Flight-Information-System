@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import com.example.demo.server.servant.models.DataEntity;
@@ -27,6 +28,16 @@ public class ServerReply {
 
     public String getClientDisplay() {
         if (!response.isPresent()) return toString();
-        return ((DataEntity) response.get()).getClientDisplay();
+
+        Object responseObject = response.get();
+        String res = "";
+        if (responseObject instanceof ArrayList) {
+            for (Object responseItem: (ArrayList<Object>) responseObject) {
+                res += "\n" + ((DataEntity) responseItem).getClientDisplay() + "\n";
+            }
+        } else {
+            res = ((DataEntity) responseObject).getClientDisplay();
+        }
+        return res;
     }
 }
