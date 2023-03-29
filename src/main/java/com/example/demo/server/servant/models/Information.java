@@ -19,16 +19,6 @@ import lombok.Setter;
 @Setter
 public class Information implements DataEntity {
     @Id
-//    @SequenceGenerator(
-//            name = "flightID_sequence",
-//            sequenceName = "flightID_sequence",
-//            initialValue = 1000,
-//            allocationSize = 1
-//    )
-//    @GeneratedValue(
-//            strategy = GenerationType.SEQUENCE,
-//            generator = "flightID_sequence"
-//    )
     @Column(name = "flight_identifier", unique = true, nullable = false)
     private int flightID;
     @Column(name = "source", nullable = false)

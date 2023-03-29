@@ -23,7 +23,7 @@ public interface InformationRepository extends PagingAndSortingRepository<Inform
 
         // For service 2 - query the departure time, airfare and seat availability by specifying the flight identifier
         @Query(value = "SELECT f FROM Flight_Information f WHERE f.flightID = ?1")
-        Optional<Information> findFlightsByFlightID(int flightID);
+        Optional<Information> findFlightByFlightID(int flightID);
 
         // For service 3 - make seat reservation by specifying the flight identifier and
         // the number of seats to reserve

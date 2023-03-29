@@ -2,12 +2,20 @@ package com.example.demo.server.servant.models;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * Contains IP address, port to identify a unique client instance
  */
+@NoArgsConstructor
+@Getter
+@Setter
 @Embeddable
 public class ClientID implements Serializable {
     @Column(name = "client_ip", nullable = false)
@@ -18,26 +26,6 @@ public class ClientID implements Serializable {
 
     public ClientID(String IP, int port) {
         this.IP = IP;
-        this.port = port;
-    }
-
-    public ClientID() {
-
-    }
-
-    public String getIP() {
-        return IP;
-    }
-
-    public void setIP(String IP) {
-        this.IP = IP;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
         this.port = port;
     }
 

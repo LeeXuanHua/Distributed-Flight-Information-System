@@ -2,10 +2,17 @@ package com.example.demo.server.servant.models;
 
 import java.time.LocalDateTime;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
  * Self-defined time class to store the year, month, date, hours, min, sec, and ms in integers.
  * Provides methods to convert to DateTime object and vice versa (for Java JPA).
  */
+@Getter
+@Setter
+@NoArgsConstructor
 public class Time {
     private int year;
     private int month;
@@ -15,8 +22,6 @@ public class Time {
     private int sec;
     private int ms;
 
-    public Time() {}
-
     public Time(int year, int month, int date, int hours, int min, int sec, int ms) {
         this.year = year;
         this.month = month;
@@ -24,62 +29,6 @@ public class Time {
         this.hours = hours;
         this.min = min;
         this.sec = sec;
-        this.ms = ms;
-    }
-
-    public int getYear() {
-        return year;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
-    }
-
-    public int getMonth() {
-        return month;
-    }
-
-    public void setMonth(int month) {
-        this.month = month;
-    }
-
-    public int getDate() {
-        return date;
-    }
-
-    public void setDate(int date) {
-        this.date = date;
-    }
-
-    public int getHours() {
-        return hours;
-    }
-
-    public void setHours(int hours) {
-        this.hours = hours;
-    }
-
-    public int getMin() {
-        return min;
-    }
-
-    public void setMin(int min) {
-        this.min = min;
-    }
-
-    public int getSec() {
-        return sec;
-    }
-
-    public void setSec(int sec) {
-        this.sec = sec;
-    }
-
-    public int getMs() {
-        return ms;
-    }
-
-    public void setMs(int ms) {
         this.ms = ms;
     }
 

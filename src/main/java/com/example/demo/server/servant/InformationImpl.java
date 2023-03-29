@@ -17,16 +17,16 @@ public class InformationImpl implements InformationInterface {
         this.informationRepository = informationRepository;
     }
 
-    //Service 1
+    //Service 1 - Get Flights By Source and Destination
     @Override
     public List<Information> GetFlightsBySourceAndDestination(String src, String dest) {
         return informationRepository.findFlightsBySrcAndDest(src, dest);
     }
 
-    //Service 2
+    //Service 2 - Get Flight By Id
     @Override
     public Optional<Information> GetFlightById(int id) {
-        return informationRepository.findFlightsByFlightID(id);
+        return informationRepository.findFlightByFlightID(id);
     }
 
     @Override
