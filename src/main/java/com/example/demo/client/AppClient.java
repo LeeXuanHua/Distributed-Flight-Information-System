@@ -31,7 +31,7 @@ public class AppClient {
         this.MESSAGE_ID = 0;
     }
 
-    public void run() {
+    public boolean run() {
         try {
             // 1. Get user choice
             Scanner scanner = new Scanner(System.in);
@@ -47,10 +47,10 @@ public class AppClient {
                 System.out.println("7: Terminate client");
                 System.out.print("Make your selection (1-7): ");
                 choice = scanner.next();
-            } while (!InputValidator.isInteger(choice, Optional.of(1), Optional.of(6)));
+            } while (!InputValidator.isInteger(choice, Optional.of(1), Optional.of(7)));
 
             if (Integer.parseInt(choice) == 7) {
-                return;
+                return false;
             }
 
             // 2. Construct and marshall request
@@ -78,6 +78,7 @@ public class AppClient {
         } catch (IOException e) {
             log.info("Monitoring has expired");
         }
+        return true;
     }
 
     private void handleCallback(LocalDateTime expiryTime) throws IOException {
