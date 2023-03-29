@@ -21,6 +21,15 @@ public class InputValidator {
         return (min.get() <= Integer.parseInt(s)) && (Integer.parseInt(s) <= max.get());
     }
 
+    public static boolean isInteger(String s) {
+        try {
+            Integer.parseInt(s);
+        } catch(NumberFormatException e) {
+            return false;
+        }
+        return true;
+    }
+
     public static boolean isValidIp(String s) {
         InetAddressValidator validator = InetAddressValidator.getInstance();
         return validator.isValid(s);

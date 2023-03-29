@@ -2,6 +2,7 @@ package com.example.demo.client;
 
 import java.util.Scanner;
 
+import com.example.demo.utils.InputValidator;
 import com.example.demo.utils.MarshallUtil;
 
 public class ClientServices {
@@ -40,8 +41,7 @@ public class ClientServices {
 
     private static ClientRequest getFlightsById(int messageId, Scanner scanner) {
         System.out.println("You have selected Service 2: Get Flights by ID");
-        System.out.print("Please input the ID of your desired flight: ");
-        String flightID = scanner.nextLine();
+        String flightID = getUserInputInteger(scanner, "Please input the ID of your desired flight: ");
 
         String requestBody = ConstructAttribute("flightID", flightID);
         ClientRequest clientRequest = new ClientRequest(messageId, 2, requestBody);
@@ -50,11 +50,8 @@ public class ClientServices {
 
     private static ClientRequest addBooking(int messageId, Scanner scanner) {
         System.out.println("You have selected Service 3: Book seats on a flight");
-        System.out.print("Please input the ID of your desired flight: ");
-        String flightID = scanner.nextLine();
-
-        System.out.print("Please input the number of seats you would like to book: ");
-        String numSeats = scanner.nextLine();
+        String flightID = getUserInputInteger(scanner, "Please input the ID of your desired flight: ");
+        String numSeats = getUserInputInteger(scanner, "Please input the number of seats you would like to book: ");
 
         String requestBody = ConstructAttribute("flightID", flightID) + ConstructAttribute("numSeats", numSeats);
         ClientRequest clientRequest = new ClientRequest(messageId, 3, requestBody);
@@ -63,11 +60,8 @@ public class ClientServices {
 
     private static ClientRequest monitorFlight(int messageId, Scanner scanner) {
         System.out.println("You have selected Service 4: Monitor flight availability");
-        System.out.print("Please input the ID of your desired flight: ");
-        String flightID = scanner.nextLine();
-
-        System.out.print("Please input the duration you would like to monitor for (in seconds): ");
-        String monitorInterval = scanner.nextLine();
+        String flightID = getUserInputInteger(scanner, "Please input the ID of your desired flight: ");
+        String monitorInterval = getUserInputInteger(scanner, "Please input the duration you would like to monitor for (in seconds): ");
 
         String requestBody = ConstructAttribute("flightID", flightID) + ConstructAttribute("monitorInterval", monitorInterval);
         ClientRequest clientRequest = new ClientRequest(messageId, 4, requestBody);
@@ -76,8 +70,7 @@ public class ClientServices {
 
     private static ClientRequest deleteBooking(int messageId, Scanner scanner) {
         System.out.println("You have selected Service 5: Delete flight booking");
-        System.out.print("Please input the ID of your desired flight: ");
-        String flightID = scanner.nextLine();
+        String flightID = getUserInputInteger(scanner, "Please input the ID of your desired flight: ");
 
         String requestBody = ConstructAttribute("flightID", flightID);
         ClientRequest clientRequest = new ClientRequest(messageId, 5, requestBody);
@@ -86,15 +79,21 @@ public class ClientServices {
 
     private static ClientRequest updateBooking(int messageId, Scanner scanner) {
         System.out.println("You have selected Service 6: Update flight booking");
-        System.out.print("Please input the ID of your desired flight: ");
-        String flightID = scanner.nextLine();
-
-        System.out.print("Please input the number of seats you would like to increase your booking by: ");
-        String numSeats = scanner.nextLine();
+        String flightID = getUserInputInteger(scanner, "Please input the ID of your desired flight: ");
+        String numSeats = getUserInputInteger(scanner, "Please input the number of seats you would like to increase your booking by: ");
 
         String requestBody = ConstructAttribute("flightID", flightID) + ConstructAttribute("numSeats", numSeats);
         ClientRequest clientRequest = new ClientRequest(messageId, 6, requestBody);
         return clientRequest;
+    }
+
+    private static String getUserInputInteger(Scanner scanner, String message) {
+        String input;
+        do {
+            System.out.print(message);
+            input = scanner.nextLine();
+        } while (!InputValidator.isInteger(input));
+        return input;
     }
 
     public static String ConstructAttribute(String key, String value) {
