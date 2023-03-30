@@ -5,6 +5,7 @@ Design and Implementation of A Distributed Flight Information System for Distrib
 ### Requirements
 1. Postgres
 2. JDK 15
+3. Apache Maven
 
 
 ### Installation
