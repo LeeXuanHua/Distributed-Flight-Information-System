@@ -16,7 +16,7 @@ public class Simulate {
     public static boolean isFailure(ReqOrReplyEnum reqOrReplyEnum) {
         // 1. Read in our config file and get the failure % chance we defined there
         try {
-            Scanner in = new Scanner(new FileReader(Paths.get("").toAbsolutePath() + "/src/main/java/com/example/demo/utils/" + "Failure.txt"));
+            Scanner in = new Scanner(new FileReader(Paths.get("").toAbsolutePath() + "/src/main/java/com/distributedflightinfosys/utils/" + "Failure.txt"));
             StringBuilder sb = new StringBuilder();
             while(in.hasNext()) {
                 sb.append(in.next());
